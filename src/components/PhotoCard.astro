@@ -1,0 +1,59 @@
+---
+import type { Photo } from '../data/photos';
+
+export interface Props {
+  photo: Photo;
+  variant?: 'featured' | 'grid';
+}
+
+const { photo, variant = 'grid' } = Astro.props;
+---
+
+<figure class={`photo-card ${variant}`}>
+  <div class="image-wrap">
+    <img
+      src={photo.src}
+      alt={photo.title}
+      loading="lazy"
+    />
+  </div>
+  {photo.title && <figcaption class="caption">{photo.title}</figcaption>}
+</figure>
+
+<style>
+  .photo-card.featured {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .photo-card.grid {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .image-wrap {
+    width: 100%;
+    background: #e0e0e0;
+  }
+
+  .photo-card.grid .image-wrap {
+    aspect-ratio: 4 / 3;
+  }
+
+  .photo-card.featured .image-wrap {
+    height: 100%;
+  }
+
+  .image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .caption {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+</style>
