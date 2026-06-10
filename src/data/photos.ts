@@ -10,7 +10,7 @@ export interface PhotoCollection {
   photos: Photo[];
 }
 
-export const collections: PhotoCollection[] = [
+export const photoCollections: PhotoCollection[] = [
   {
     slug: "oregon-coast",
     title: "Oregon Coast",
@@ -32,9 +32,9 @@ export const collections: PhotoCollection[] = [
 ];
 
 export function getFeaturedPhotos(): Photo[] {
-  return collections.flatMap((c) => c.photos).slice(0, 7);
+  return photoCollections.flatMap((c) => c.photos).slice(0, 7);
 }
 
 export function getCollectionBySlug(slug: string): PhotoCollection | undefined {
-  return collections.find((c) => c.slug === slug);
+  return photoCollections.find((c) => c.slug === slug);
 }

@@ -1207,7 +1207,7 @@ Write `src/pages/photos/index.astro`:
 ```astro
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { collections, getFeaturedPhotos } from '../../data/photos';
+import { photoCollections, getFeaturedPhotos } from '../../data/photos';
 
 const featured = getFeaturedPhotos();
 ---
@@ -1237,7 +1237,7 @@ const featured = getFeaturedPhotos();
     <div class="collections-section fade-in-on-scroll">
       <div class="collections-label">Collections</div>
       <div class="collections-grid">
-        {collections.map((col) => (
+        {photoCollections.map((col) => (
           <a href={`/photos/${col.slug}`} class="collection-card">
             <div class="collection-cover">
               <img src={col.cover} alt={col.title} />
@@ -1351,11 +1351,11 @@ Write `src/pages/photos/[...collection].astro`:
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotoCard from '../../components/PhotoCard.astro';
-import { collections, getCollectionBySlug } from '../../data/photos';
+import { photoCollections, getCollectionBySlug } from '../../data/photos';
 import type { GetStaticPaths } from 'astro';
 
 export async function getStaticPaths() {
-  return collections.map((col) => ({
+  return photoCollections.map((col) => ({
     params: { collection: col.slug },
     props: { collection: col },
   }));
