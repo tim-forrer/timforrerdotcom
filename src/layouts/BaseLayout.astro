@@ -27,35 +27,20 @@ const { title, page } = Astro.props;
 </html>
 
 <script>
-  // Scroll-reveal observer — watches for .reveal elements
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-
   // Scroll-driven fade out/in for paired elements
   const fadeOutEl = document.querySelector('.fade-out-on-scroll');
   const fadeInEl = document.querySelector('.fade-in-on-scroll');
 
   if (fadeOutEl && fadeInEl) {
+    let triggerPoint: number;
+
+    const updateTriggerPoint = () => {
+      triggerPoint = window.innerHeight * 0.3;
+    };
+
     const onScroll = () => {
       const scrollY = window.scrollY;
-      const triggerPoint = window.innerHeight * 0.3;
       const progress = Math.min(scrollY / triggerPoint, 1);
-
-      fadeOutEl.style.opacity = String(1 - progress);
-      fadeOutEl.style.transform = `translateY(${-20 * progress}px)`;
-
-      fadeInEl.style.opacity = String(progress);
-      fadeInEl.style.transform = `translateY(${20 * (1 - progress)}px)`;
 
       if (progress >= 1) {
         fadeOutEl.classList.add('scrolled');
@@ -66,6 +51,23 @@ const { title, page } = Astro.props;
       }
     };
 
+    updateTriggerPoint();
+    window.addEventListener('resize', updateTriggerPoint, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
   }
+
+  // Unobserve revealed elements
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 </script>
