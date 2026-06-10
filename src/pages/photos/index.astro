@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { photoCollections, getFeaturedPhotos } from '../../data/photos';
+
+const featured = getFeaturedPhotos();
+---
+
+<BaseLayout page="photos" title="Photos">
+  <section class="photos-page">
+    <div class="featured-label">Featured</div>
+
+    <div class="masonry fade-out-on-scroll">
+      {featured.slice(0, 1).map((photo) => (
+        <div class="masonry-item tall">
+          <img src={photo.src} alt={photo.title} />
+        </div>
+      ))}
+      {featured.slice(1, 3).map((photo) => (
+        <div class="masonry-item">
+          <img src={photo.src} alt={photo.title} />
+        </div>
+      ))}
+      {featured.slice(3, 5).map((photo) => (
+        <div class="masonry-item wide">
+          <img src={photo.src} alt={photo.title} />
+        </div>
+      ))}
+    </div>
+
+    <div class="collections-section fade-in-on-scroll">
+      <div class="collections-label">Collections</div>
+      <div class="collections-grid">
+        {photoCollections.map((col) => (
+          <a href={`/photos/${col.slug}`} class="collection-card">
+            <div class="collection-cover">
+              <img src={col.cover} alt={col.title} />
+            </div>
+            <div class="collection-title">{col.title}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .photos-page {
+    padding-bottom: 40px;
+  }
+
+  .featured-label,
+  .collections-label {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .masonry {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 120px 120px;
+    gap: 6px;
+    margin-bottom: 40px;
+  }
+
+  .masonry-item {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #e0e0e0;
+  }
+
+  .masonry-item.tall {
+    grid-row: span 2;
+  }
+
+  .masonry-item.wide {
+    grid-column: span 2;
+  }
+
+  .masonry-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .collections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .collection-card {
+    position: relative;
+    display: block;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .collection-cover {
+    aspect-ratio: 4 / 3;
+    background: #e0e0e0;
+  }
+
+  .collection-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .collection-title {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+</style>
