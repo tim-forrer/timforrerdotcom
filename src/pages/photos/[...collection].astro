@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PhotoCard from '../../components/PhotoCard.astro';
+import { photoCollections, getCollectionBySlug } from '../../data/photos';
+
+export async function getStaticPaths() {
+  return photoCollections.map((col) => ({
+    params: { collection: col.slug },
+    props: { collection: col },
+  }));
+}
+
+const { collection } = Astro.props;
+const col = getCollectionBySlug(collection.slug);
+---
+
+<BaseLayout title={col?.title ?? 'Collection'} page="photos">
+  <section class="collection-page">
+    <h1 class="title">{col?.title}</h1>
+    <div class="grid">
+      {col?.photos.map((photo) => (
+        <PhotoCard photo={photo} variant="grid" />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .collection-page {
+    padding-bottom: 60px;
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-title);
+    margin-bottom: 24px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media (min-width: 600px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
