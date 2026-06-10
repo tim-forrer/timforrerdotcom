@@ -1,0 +1,71 @@
+---
+import Nav from '../components/Nav.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  page?: string;
+}
+
+const { title, page } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title ? `${title} — tim forrer` : 'tim forrer'}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <Nav currentPage={page} />
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<script>
+  // Scroll-reveal observer — watches for .reveal elements
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+  // Scroll-driven fade out/in for paired elements
+  const fadeOutEl = document.querySelector('.fade-out-on-scroll');
+  const fadeInEl = document.querySelector('.fade-in-on-scroll');
+
+  if (fadeOutEl && fadeInEl) {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const triggerPoint = window.innerHeight * 0.3;
+      const progress = Math.min(scrollY / triggerPoint, 1);
+
+      fadeOutEl.style.opacity = String(1 - progress);
+      fadeOutEl.style.transform = `translateY(${-20 * progress}px)`;
+
+      fadeInEl.style.opacity = String(progress);
+      fadeInEl.style.transform = `translateY(${20 * (1 - progress)}px)`;
+
+      if (progress >= 1) {
+        fadeOutEl.classList.add('scrolled');
+        fadeInEl.classList.add('visible');
+      } else {
+        fadeOutEl.classList.remove('scrolled');
+        fadeInEl.classList.remove('visible');
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
