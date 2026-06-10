@@ -7,16 +7,8 @@ const featuredPhoto = getFeaturedPhotos()[0];
 
 <BaseLayout title="Home">
   <section class="hero">
-    <div class="fade-out-on-scroll">
-      <div class="hero-image">
-        <img src={featuredPhoto?.src ?? '/photos/placeholder.jpg'} alt="Featured photo" />
-      </div>
-    </div>
-    <div class="fade-in-on-scroll">
-      <div class="intro">
-        <h1>Hi, I'm Tim.</h1>
-        <p>I write about software, take photos of the pacific northwest, and build things that interest me.</p>
-      </div>
+    <div class="hero-image reveal">
+      <img src={featuredPhoto?.src ?? '/photos/placeholder.jpg'} alt="Featured photo" />
     </div>
   </section>
 </BaseLayout>
@@ -24,17 +16,14 @@ const featuredPhoto = getFeaturedPhotos()[0];
 <style>
   .hero {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 80px);
-    text-align: center;
   }
 
   .hero-image {
     width: 60%;
     max-width: 480px;
-    margin: 0 auto;
     border-radius: 2px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
@@ -44,23 +33,6 @@ const featuredPhoto = getFeaturedPhotos()[0];
     aspect-ratio: 4 / 3;
     object-fit: cover;
     width: 100%;
-  }
-
-  .intro {
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .intro h1 {
-    font-size: 28px;
-    font-weight: normal;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-
-  .intro p {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.7;
+    display: block;
   }
 </style>

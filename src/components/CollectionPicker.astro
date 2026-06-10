@@ -1,0 +1,39 @@
+---
+import { photoCollections } from '../data/photos';
+
+export interface Props {
+  current?: string;
+}
+
+const { current } = Astro.props;
+---
+
+<select class="collection-picker" onchange="if (this.value) window.location.href = this.value">
+  <option value="">Go to collection…</option>
+  {photoCollections.map((col) => (
+    <option value={`/photos/${col.slug}`} selected={col.slug === current}>{col.title}</option>
+  ))}
+</select>
+
+<style>
+  .collection-picker {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 4px 26px 4px 8px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23999'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
+
+  .collection-picker:hover {
+    border-color: var(--text-muted);
+  }
+</style>

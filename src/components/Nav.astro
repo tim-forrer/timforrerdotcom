@@ -7,7 +7,7 @@ const { currentPage } = Astro.props;
 
 const links = [
   { href: '/writings', label: 'writings' },
-  { href: '/photos', label: 'photos' },
+  { href: '/photos/featured', label: 'photos' },
   { href: '/about', label: 'about' },
 ];
 ---
@@ -31,7 +31,7 @@ const links = [
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 0;
+    padding-block: 14px;
     margin-bottom: 28px;
     border-bottom: 1px solid var(--border);
     font-family: system-ui, sans-serif;

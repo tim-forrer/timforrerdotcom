@@ -12,27 +12,39 @@ export interface PhotoCollection {
 
 export const photoCollections: PhotoCollection[] = [
   {
+    slug: "featured",
+    title: "Featured",
+    cover: "/photos/placeholders/temp-img.jpg",
+    photos: [
+      { src: "/photos/placeholders/temp-img.jpg", title: "Golden Hour" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Morning Light" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Reflections" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Path Through the Trees" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Coastal View" },
+    ],
+  },
+  {
     slug: "oregon-coast",
     title: "Oregon Coast",
-    cover: "/photos/placeholders/coast-cover.jpg",
+    cover: "/photos/placeholders/temp-img.jpg",
     photos: [
-      { src: "/photos/placeholders/coast-01.jpg", title: "Haystack Rock" },
-      { src: "/photos/placeholders/coast-02.jpg", title: "Mist at Cannon Beach" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Haystack Rock" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Mist at Cannon Beach" },
     ],
   },
   {
     slug: "mountains",
     title: "Mountains",
-    cover: "/photos/placeholders/mtn-cover.jpg",
+    cover: "/photos/placeholders/temp-img.jpg",
     photos: [
-      { src: "/photos/placeholders/mtn-01.jpg", title: "Alpine Meadow" },
-      { src: "/photos/placeholders/mtn-02.jpg", title: "Summit View" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Alpine Meadow" },
+      { src: "/photos/placeholders/temp-img.jpg", title: "Summit View" },
     ],
   },
 ];
 
 export function getFeaturedPhotos(): Photo[] {
-  return photoCollections.flatMap((c) => c.photos).slice(0, 7);
+  return photoCollections[0].photos;
 }
 
 export function getCollectionBySlug(slug: string): PhotoCollection | undefined {
