@@ -1,0 +1,58 @@
+<h2>Two approaches — nav placement tradeoff</h2>
+<p class="subtitle">Option A: centered photo + top nav. Option B: full-viewport photo + bottom nav.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">A: Centered + Top Nav</div>
+    <div class="mockup-body" style="background:#fff;padding:0;font-family:system-ui,sans-serif;height:380px;display:flex;flex-direction:column;">
+      <div style="display:flex;justify-content:space-between;padding:14px 24px;">
+        <div style="font-weight:bold;font-size:13px;color:#1a1a1a;">tim forrer</div>
+        <div style="display:flex;gap:16px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">
+          <span>writings</span>
+          <span>photos</span>
+          <span>about</span>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px 40px;">
+        <div style="width:55%;aspect-ratio:4/3;background:linear-gradient(135deg,#b8c8d8,#8aaabc);border-radius:2px;box-shadow:0 4px 16px rgba(0,0,0,0.06);"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">B: Full-viewport + Bottom Nav</div>
+    <div class="mockup-body" style="background:linear-gradient(135deg,#b8c8d8,#8aaabc);padding:20px;font-family:system-ui,sans-serif;height:380px;display:flex;flex-direction:column;color:#fff;">
+      <div style="flex:1;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,0.2);">
+        <div style="font-weight:bold;font-size:13px;">tim forrer</div>
+        <div style="display:flex;gap:16px;font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;">
+          <span>writings</span>
+          <span>photos</span>
+          <span>about</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:16px;">
+  <div style="background:#f9f9f9;border-radius:8px;padding:16px;font-family:system-ui,sans-serif;font-size:13px;color:#555;line-height:1.6;">
+    <p><strong>A</strong> — Feels like a gallery. The photo is an object in the room. Nav is unobtrusive at top.</p>
+    <p><strong>B</strong> — Feels cinematic. You're inside the photo. Nav at bottom like film credits.</p>
+  </div>
+</div>
+
+<h3>Which do you prefer?</h3>
+<div class="options" style="margin-top:10px;">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Centered photo + top nav</h3><p>Gallery object feel</p></div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Full viewport + bottom nav</h3><p>Cinematic feel</p></div>
+  </div>
+  <div class="option" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content"><h3>Something in between</h3><p>I'll explain</p></div>
+  </div>
+</div>

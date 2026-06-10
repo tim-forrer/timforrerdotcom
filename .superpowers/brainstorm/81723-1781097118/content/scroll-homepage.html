@@ -1,0 +1,63 @@
+<h2>Scroll-Reveal Homepage</h2>
+<p class="subtitle">Initial state: full-viewport photo. Scroll: photo fades out, intro fades in.</p>
+
+<div class="section">
+  <h3>Initial state (above the fold)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background:#fff;padding:0;position:relative;font-family:system-ui,sans-serif;">
+      <div style="aspect-ratio:16/10;background:linear-gradient(135deg,#a8b8c8,#7a9eb3);display:flex;align-items:flex-end;padding:20px;border-radius:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+          <div style="font-weight:bold;font-size:13px;letter-spacing:-0.3px;color:rgba(255,255,255,0.9);">tim forrer</div>
+          <div style="display:flex;gap:16px;font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;">
+            <span>writings</span>
+            <span>photos</span>
+            <span>about</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>After scrolling a bit</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background:#fff;padding:40px 20px;font-family:Georgia,serif;border-radius:4px;position:relative;">
+      <div style="max-width:480px;margin:0 auto;text-align:center;">
+        <div style="font-size:32px;line-height:1.3;margin-bottom:8px;">Hi, I'm Tim.</div>
+        <div style="color:#666;font-size:16px;line-height:1.7;">I write about software, take photos of the pacific northwest, and build things that interest me.</div>
+      </div>
+      <div style="margin-top:40px;width:100%;height:1px;background:#eee;"></div>
+      <div style="margin-top:40px;text-align:center;">
+        <div style="font-family:system-ui,sans-serif;font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">— more content below scroll —</div>
+        <div style="font-family:system-ui,sans-serif;font-size:11px;color:#bbb;">(placeholder for potential future sections)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>How the scroll works</h3>
+  <div style="background:#f9f9f9;border-radius:8px;padding:16px;font-family:system-ui,sans-serif;font-size:13px;color:#555;line-height:1.6;">
+    <p><strong>1.</strong> Photo fills the viewport — nav is translucent over it</p>
+    <p><strong>2.</strong> As you scroll, the photo fades out and the intro fades in</p>
+    <p><strong>3.</strong> At full scroll, you're left with the intro text centered on a white page</p>
+    <p style="margin-top:8px;color:#999;font-size:12px;">This is lightweight CSS — no heavy JS libraries needed. Compatible with Dioxus SSR.</p>
+  </div>
+</div>
+
+<h3>Does this direction excite you?</h3>
+<div class="options" style="margin-top:10px;">
+  <div class="option" data-choice="yes" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Love it — proceed</h3><p>Let's design the other pages</p></div>
+  </div>
+  <div class="option" data-choice="tweaks" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Close — minor tweaks</h3><p>I have adjustments</p></div>
+  </div>
+  <div class="option" data-choice="no" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content"><h3>Not what I imagined</h3><p>Let's discuss more</p></div>
+  </div>
+</div>
