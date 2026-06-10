@@ -1,0 +1,81 @@
+---
+export interface TimelineEntry {
+  title: string;
+  date: string;
+}
+
+export interface Props {
+  entries: TimelineEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="timeline">
+  <div class="label">A Brief History of Tim</div>
+  <div class="entries">
+    {entries.map((entry, i) => (
+      <div class="entry">
+        <div class="entry-content">
+          <div class="entry-title">{entry.title}</div>
+          <div class="entry-date">{entry.date}</div>
+        </div>
+        {i < entries.length - 1 && <div class="line" />}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .label {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .entries {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .entry-content {
+    text-align: center;
+  }
+
+  .entry-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-title);
+  }
+
+  .entry-date {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .line {
+    width: 2px;
+    height: 24px;
+    background: #e0e0e0;
+    margin: 6px 0;
+    border-radius: 1px;
+  }
+</style>
