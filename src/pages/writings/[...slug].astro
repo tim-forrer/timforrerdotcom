@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ViewToggle from '../../components/ViewToggle.astro';
+import HWPagination from '../../components/HWPagination.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
@@ -15,14 +17,19 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
+const handwritingPages = post.data.handwriting ?? [];
+const hasHandwriting = handwritingPages.length > 0;
 ---
 
 <BaseLayout title={post.data.title}>
   <article class="writing">
+    {hasHandwriting && (
+      <p class="sr-notice">
+        This page has handwritten content. Switch to Text view for a readable version.
+      </p>
+    )}
+
     <header class="header">
-      {post.data.hero && (
-        <img class="hero-img" src={post.data.hero} alt="" />
-      )}
       <h1 class="title">{post.data.title}</h1>
       <div class="meta">
         <time datetime={post.data.date.toISOString()}>
@@ -32,8 +39,12 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
             year: 'numeric',
           })}
         </time>
-        <span class="sep">·</span>
-        <span>{readingTime} min read</span>
+        {!hasHandwriting && (
+          <>
+            <span class="sep">·</span>
+            <span>{readingTime} min read</span>
+          </>
+        )}
       </div>
       <div class="tags">
         {post.data.tags.map((tag: string) => (
@@ -41,11 +52,90 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
         ))}
       </div>
     </header>
-    <div class="content">
-      <Content />
+
+    {hasHandwriting && (
+      <div class="toggle-wrap">
+        <ViewToggle currentView="original" />
+      </div>
+    )}
+
+    {hasHandwriting && (
+      <div class="view-pane" id="view-original">
+        <div class="hw-container" id="hw-container">
+          {handwritingPages.map((src, i) => (
+            <img
+              class="hw-page"
+              src={src}
+              alt=""
+              data-page={i}
+              style={{ display: i === 0 ? 'block' : 'none' }}
+            />
+          ))}
+        </div>
+        <HWPagination current={1} total={handwritingPages.length} />
+      </div>
+    )}
+
+    <div class="view-pane" id="view-text" style={{ display: hasHandwriting ? 'none' : 'block' }}>
+      <div class="text-content">
+        <Content />
+      </div>
     </div>
   </article>
 </BaseLayout>
+
+{hasHandwriting && (
+  <script>
+    const toggle = document.querySelector('[data-component="view-toggle"]');
+    const originalView = document.getElementById('view-original');
+    const textView = document.getElementById('view-text');
+    const container = document.getElementById('hw-container');
+
+    if (toggle && originalView && textView && container) {
+      const pages = container.querySelectorAll('.hw-page');
+      const totalPages = pages.length;
+      let currentPage = 1;
+
+      function showView(view) {
+        if (view === 'original') {
+          originalView.style.display = '';
+          textView.style.display = 'none';
+        } else {
+          originalView.style.display = 'none';
+          textView.style.display = 'block';
+        }
+      }
+
+      function showPage(n) {
+        currentPage = n;
+        pages.forEach((p, i) => {
+          p.style.display = i === n - 1 ? 'block' : 'none';
+        });
+        const pagination = document.querySelector('[data-component="hw-pagination"]');
+        if (pagination) {
+          const count = pagination.querySelector('.page-count');
+          if (count) count.textContent = currentPage + ' / ' + totalPages;
+          const prev = pagination.querySelector('[data-action="prev"]');
+          const next = pagination.querySelector('[data-action="next"]');
+          if (prev) prev.disabled = currentPage <= 1;
+          if (next) next.disabled = currentPage >= totalPages;
+        }
+      }
+
+      toggle.addEventListener('view-toggle', ((e) => {
+        showView(e.detail.view);
+        if (e.detail.view === 'original') showPage(1);
+      }) as EventListener);
+
+      const pagination = document.querySelector('[data-component="hw-pagination"]');
+      if (pagination) {
+        pagination.addEventListener('page-change', ((e) => {
+          showPage(e.detail.page);
+        }) as EventListener);
+      }
+    }
+  </script>
+)}
 
 <style>
   .writing {
@@ -54,16 +144,20 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     padding-bottom: 60px;
   }
 
-  .header {
-    margin-bottom: 32px;
+  .sr-notice {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  .hero-img {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    margin-bottom: 20px;
+  .header {
+    margin-bottom: 16px;
   }
 
   .title {
@@ -78,6 +172,7 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     font-size: 13px;
     color: var(--text-muted);
     margin-bottom: 10px;
+    font-family: system-ui, sans-serif;
   }
 
   .sep {
@@ -99,37 +194,55 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     color: var(--text-secondary);
   }
 
-  .content {
+  .toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .hw-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hw-page {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .text-content {
     line-height: 1.8;
     color: var(--text);
   }
 
-  .content h2 {
+  .text-content h2 {
     font-size: 30px;
     margin: 28px 0 12px;
     color: var(--text-title);
   }
 
-  .content h3 {
+  .text-content h3 {
     font-size: 27px;
     margin: 20px 0 8px;
     color: var(--text-title);
   }
 
-  .content p {
+  .text-content p {
     margin-bottom: 16px;
   }
 
-  .content ul,
-  .content ol {
+  .text-content ul,
+  .text-content ol {
     margin: 0 0 16px 24px;
   }
 
-  .content li {
+  .text-content li {
     margin-bottom: 4px;
   }
 
-  .content code {
+  .text-content code {
     font-family: 'SF Mono', 'Fira Code', monospace;
     font-size: 14px;
     background: #f0f0f0;
@@ -137,7 +250,7 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     border-radius: 3px;
   }
 
-  .content pre {
+  .text-content pre {
     background: #f5f5f5;
     padding: 16px;
     border-radius: var(--radius-md);
@@ -145,12 +258,12 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     margin-bottom: 16px;
   }
 
-  .content pre code {
+  .text-content pre code {
     background: none;
     padding: 0;
   }
 
-  .content blockquote {
+  .text-content blockquote {
     border-left: 3px solid var(--border);
     padding-left: 16px;
     color: var(--text-secondary);
@@ -158,7 +271,7 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
     margin-bottom: 16px;
   }
 
-  .content a {
+  .text-content a {
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
