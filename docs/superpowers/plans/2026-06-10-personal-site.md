@@ -40,7 +40,6 @@
 │   │   ├── WritingCard.astro
 │   │   ├── TagFilter.astro
 │   │   ├── Timeline.astro
-│   │   ├── ContactForm.astro
 │   │   └── PhotoCard.astro
 │   └── styles/
 │       └── global.css
@@ -1419,7 +1418,6 @@ git commit -m "feat: add photo collection detail page"
 
 **Files:**
 - Create: `src/components/Timeline.astro`
-- Create: `src/components/ContactForm.astro`
 - Modify: `src/pages/about.astro`
 
 - [ ] **Step 1: Create Timeline component**
@@ -1510,104 +1508,7 @@ const { entries } = Astro.props;
 </style>
 ```
 
-- [ ] **Step 2: Create ContactForm component**
-
-Write `src/components/ContactForm.astro`. Non-functional for now — UI only:
-
-```astro
-<div class="contact-form">
-  <div class="label">Get in touch</div>
-  <div class="form-body">
-    <div class="field">
-      <label for="email">Your email</label>
-      <input type="email" id="email" placeholder="you@example.com" disabled />
-    </div>
-    <div class="field">
-      <label for="message">Message</label>
-      <textarea id="message" rows="4" placeholder="Write something..." disabled></textarea>
-    </div>
-    <button type="button" class="send-btn" disabled>Send</button>
-    <p class="note">Contact form coming soon.</p>
-  </div>
-</div>
-
-<style>
-  .contact-form {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .label {
-    font-family: system-ui, sans-serif;
-    font-size: 11px;
-    color: var(--text-label);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .form-body {
-    background: #fafafa;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px;
-  }
-
-  .field {
-    margin-bottom: 10px;
-  }
-
-  .field label {
-    display: block;
-    font-family: system-ui, sans-serif;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-
-  .field input,
-  .field textarea {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid var(--border-input);
-    border-radius: var(--radius-md);
-    font-family: system-ui, sans-serif;
-    font-size: 13px;
-    background: #fff;
-    color: var(--text);
-    resize: vertical;
-  }
-
-  .field input:disabled,
-  .field textarea:disabled {
-    background: #f5f5f5;
-    color: var(--text-muted);
-    cursor: not-allowed;
-  }
-
-  .send-btn {
-    background: var(--accent);
-    color: #fff;
-    padding: 8px 16px;
-    border: none;
-    border-radius: var(--radius-md);
-    font-family: system-ui, sans-serif;
-    font-size: 12px;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  .note {
-    font-family: system-ui, sans-serif;
-    font-size: 11px;
-    color: var(--text-label);
-    margin-top: 8px;
-  }
-</style>
-```
-
-- [ ] **Step 3: Create the About page**
+- [ ] **Step 2: Create the About page**
 
 Write `src/pages/about.astro`:
 
@@ -1615,7 +1516,6 @@ Write `src/pages/about.astro`:
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Timeline from '../components/Timeline.astro';
-import ContactForm from '../components/ContactForm.astro';
 
 const historyEntries = [
   { title: 'University of Oregon', date: '2020 — 2024' },
@@ -1632,10 +1532,6 @@ const historyEntries = [
 
     <div class="timeline-section reveal">
       <Timeline entries={historyEntries} />
-    </div>
-
-    <div class="contact-section reveal">
-      <ContactForm />
     </div>
   </section>
 </BaseLayout>
@@ -1659,18 +1555,14 @@ const historyEntries = [
   .timeline-section {
     margin-bottom: 48px;
   }
-
-  .contact-section {
-    margin-top: 20px;
-  }
 </style>
 ```
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 3: Commit**
 
 ```bash
-git add src/components/Timeline.astro src/components/ContactForm.astro src/pages/about.astro
-git commit -m "feat: add about page with timeline and contact form"
+git add src/components/Timeline.astro src/pages/about.astro
+git commit -m "feat: add about page with timeline"
 ```
 
 ---
@@ -1755,7 +1647,7 @@ Open the Cloudflare Pages URL and verify:
 - Individual writing page with Markdown rendering: Task 7 ✓
 - Photos with featured masonry: Task 9 ✓
 - Photo collections: Task 9 + Task 10 ✓
-- About page with bio, timeline, contact: Task 11 ✓
+- About page with bio and timeline: Task 11 ✓
 - Scroll-reveal across all pages: Task 3 (BaseLayout script) + per-page CSS classes ✓
 - Neutral palette (#f7f6f5), serif body, sans-serif UI: Task 3 (global.css) ✓
 - Reading time auto-calculated: Task 6 + Task 7 ✓

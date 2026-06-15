@@ -10,7 +10,6 @@ A personal website showcasing writings, photography, and an about page. Built wi
 - **Content:** Markdown files with frontmatter (tags, title, date, reading time, hero image)
 - **Deployment:** Cloudflare Pages (free tier). CI/CD via git push.
 - **Photos:** Stored in repo as static assets (curated exports from Immich).
-- **Contact form:** Deferred to post-launch. Form UI is ready (email field, message field, send button) but will be non-functional initially. Future integration via Cloudflare Pages function or Formspree.
 
 ## Design System
 
@@ -51,11 +50,10 @@ A personal website showcasing writings, photography, and an about page. Built wi
 - Photo detail page (/photos/collection-name/photo-slug): full image with title
 
 ### About (/about)
-- Scroll reveal: bio + timeline visible above the fold -> scroll -> contact form fades in
+- Scroll reveal: bio + timeline visible above the fold
 - Bio paragraph in a narrow centered column (text left-aligned within it)
 - "A Brief History of Tim" — centered vertical timeline with entries connected by a midline (title + date range, no description text)
-- Contact form: email field, message field, send button
-- No email address exposed (form submission only)
+- No email address exposed
 
 ## Key Behaviors
 
@@ -64,7 +62,7 @@ Used consistently across all pages. Lightweight CSS-based scroll-driven animatio
 - Homepage: hero photo fades out, intro fades in
 - Writings: most recent writing visible initially, remaining grid + tags fade in on scroll
 - Photos: featured masonry visible initially, collections fade in on scroll
-- About: bio + timeline visible initially, contact form fades in on scroll
+- About: bio + timeline visible initially
 
 ### Tag Filtering
 Filter state managed entirely client-side. Tags defined per-post in Markdown frontmatter. OR/AND toggle changes filter logic. No page reload needed.

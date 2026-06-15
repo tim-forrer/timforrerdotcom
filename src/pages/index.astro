@@ -7,7 +7,7 @@ const featuredPhoto = getFeaturedPhotos()[0];
 
 <BaseLayout title="Home">
   <section class="hero">
-    <div class="hero-image reveal">
+    <div class="hero-image">
       <img src={featuredPhoto?.src ?? '/photos/placeholder.jpg'} alt="Featured photo" />
     </div>
   </section>
@@ -15,10 +15,12 @@ const featuredPhoto = getFeaturedPhotos()[0];
 
 <style>
   .hero {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 80px);
   }
 
   .hero-image {

@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Timeline from '../components/Timeline.astro';
-import ContactForm from '../components/ContactForm.astro';
 
 const historyEntries = [
-  { title: 'University of Oregon', date: '2020 — 2024' },
-  { title: 'Started building things online', date: '2022' },
-  { title: 'This site', date: '2026' },
+  { title: 'Swindon', year: '1998' },
+  { title: 'Reading', year: '2000' },
+  { title: 'Durham', year: '2017' },
+  { title: 'Tokyo', year: '2021' },
 ];
 ---
 
@@ -19,10 +19,6 @@ const historyEntries = [
     <div class="timeline-section reveal">
       <Timeline entries={historyEntries} />
     </div>
-
-    <div class="contact-section reveal">
-      <ContactForm />
-    </div>
   </section>
 </BaseLayout>
 
@@ -32,21 +28,16 @@ const historyEntries = [
   }
 
   .bio {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto 36px;
   }
 
   .bio p {
-    font-size: 15px;
     color: var(--text-title);
-    line-height: 1.7;
   }
 
   .timeline-section {
     margin-bottom: 48px;
   }
 
-  .contact-section {
-    margin-top: 20px;
-  }
 </style>

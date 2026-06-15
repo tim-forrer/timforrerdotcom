@@ -1,7 +1,7 @@
 ---
 export interface TimelineEntry {
   title: string;
-  date: string;
+  year?: string;
 }
 
 export interface Props {
@@ -14,13 +14,11 @@ const { entries } = Astro.props;
 <div class="timeline">
   <div class="label">A Brief History of Tim</div>
   <div class="entries">
-    {entries.map((entry, i) => (
+    {entries.map((entry) => (
       <div class="entry">
-        <div class="entry-content">
-          <div class="entry-title">{entry.title}</div>
-          <div class="entry-date">{entry.date}</div>
-        </div>
-        {i < entries.length - 1 && <div class="line" />}
+        {entry.year && <div class="entry-year">{entry.year}</div>}
+        <div class="entry-title">{entry.title}</div>
+        <div class="line" />
       </div>
     ))}
   </div>
@@ -37,7 +35,7 @@ const { entries } = Astro.props;
 
   .label {
     font-family: system-ui, sans-serif;
-    font-size: 11px;
+    font-size: 16px;
     color: var(--text-label);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -56,19 +54,17 @@ const { entries } = Astro.props;
     align-items: center;
   }
 
-  .entry-content {
-    text-align: center;
+  .entry-year {
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
   }
 
   .entry-title {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 600;
     color: var(--text-title);
-  }
-
-  .entry-date {
-    font-size: 12px;
-    color: var(--text-muted);
   }
 
   .line {

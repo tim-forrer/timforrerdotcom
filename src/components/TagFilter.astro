@@ -30,15 +30,15 @@ const { tags } = Astro.props;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 16px;
     color: var(--text-muted);
   }
 
   .mode-btn {
-    padding: 2px 8px;
+    padding: 4px 12px;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    font-size: 11px;
+    border-radius: 16px;
+    font-size: 16px;
     background: transparent;
     color: var(--text-muted);
     cursor: pointer;
@@ -58,11 +58,11 @@ const { tags } = Astro.props;
   }
 
   .tag {
-    padding: 4px 10px;
+    padding: 6px 14px;
     background: #f0f0f0;
     border: none;
-    border-radius: 12px;
-    font-size: 11px;
+    border-radius: 16px;
+    font-size: 16px;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s;
@@ -75,37 +75,38 @@ const { tags } = Astro.props;
 </style>
 
 <script>
-  const root = document.currentScript?.closest('[data-component="tag-filter"]');
-  if (!root) throw new Error('TagFilter: missing data-component root');
+  const root = document.querySelector('[data-component="tag-filter"]');
 
-  const modeBtns = root.querySelectorAll('[data-mode]');
-  const tagBtns = root.querySelectorAll('[data-tag]');
-  let currentMode = 'or';
+  if (root) {
+    const modeBtns = root.querySelectorAll('[data-mode]');
+    const tagBtns = root.querySelectorAll('[data-tag]');
+    let currentMode = 'or';
 
-  modeBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      modeBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentMode = btn.dataset.mode ?? 'or';
-      dispatchFilter();
+    modeBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        modeBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode ?? 'or';
+        dispatchFilter();
+      });
     });
-  });
 
-  tagBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-      dispatchFilter();
+    tagBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        dispatchFilter();
+      });
     });
-  });
 
-  function dispatchFilter() {
-    const activeTags = [...tagBtns]
-      .filter((b) => b.classList.contains('active'))
-      .map((b) => b.dataset.tag ?? '');
+    function dispatchFilter() {
+      const activeTags = [...tagBtns]
+        .filter((b) => b.classList.contains('active'))
+        .map((b) => b.dataset.tag ?? '');
 
-    const event = new CustomEvent('tag-filter', {
-      detail: { mode: currentMode, tags: activeTags },
-    });
-    root.dispatchEvent(event);
+      const event = new CustomEvent('tag-filter', {
+        detail: { mode: currentMode, tags: activeTags },
+      });
+      root.dispatchEvent(event);
+    }
   }
 </script>
