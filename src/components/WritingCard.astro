@@ -7,12 +7,14 @@ export interface Props {
 
 const { post } = Astro.props;
 const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
+const thumbSrc = post.data.handwriting?.[0] ?? post.data.hero ?? null;
+const hasThumb = !!thumbSrc;
 ---
 
 <article class="card">
   <a href={`/writings/${post.id}`}>
     <div class="thumb">
-      {post.data.hero && <img src={post.data.hero} alt="" />}
+      {hasThumb && <img src={thumbSrc} alt="" />}
     </div>
     <h2 class="title">{post.data.title}</h2>
     <p class="meta">{readingTime} min read</p>
