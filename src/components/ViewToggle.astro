@@ -1,0 +1,71 @@
+---
+export interface Props {
+  currentView: 'original' | 'text';
+}
+
+const { currentView } = Astro.props;
+---
+
+<div class="view-toggle" data-component="view-toggle">
+  <button class="toggle-btn" data-view="original" aria-pressed={currentView === 'original'}>
+    Original
+  </button>
+  <button class="toggle-btn" data-view="text" aria-pressed={currentView === 'text'}>
+    Text
+  </button>
+</div>
+
+<script>
+  const root = document.querySelector('[data-component="view-toggle"]');
+  if (root) {
+    const btns = root.querySelectorAll('[data-view]');
+    btns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        btns.forEach((b) => {
+          b.classList.toggle('active', b.dataset.view === view);
+          b.setAttribute('aria-pressed', String(b.dataset.view === view));
+        });
+        root.dispatchEvent(new CustomEvent('view-toggle', { detail: { view } }));
+      });
+    });
+  }
+</script>
+
+<style>
+  .view-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    align-self: flex-start;
+  }
+
+  .toggle-btn {
+    padding: 6px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .toggle-btn + .toggle-btn {
+    border-left: 1px solid var(--border);
+  }
+
+  .toggle-btn.active,
+  .toggle-btn[aria-pressed="true"] {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .toggle-btn:hover:not(.active):not([aria-pressed="true"]) {
+    background: #f0eee8;
+  }
+</style>
