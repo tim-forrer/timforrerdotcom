@@ -1,0 +1,77 @@
+---
+export interface Props {
+  current: number;
+  total: number;
+}
+
+const { current, total } = Astro.props;
+---
+
+<nav class="hw-pagination" data-component="hw-pagination" aria-label="Handwriting page navigation">
+  <button class="page-btn" data-action="prev" disabled={current <= 1}>
+    ← Prev
+  </button>
+  <span class="page-count">{current} / {total}</span>
+  <button class="page-btn" data-action="next" disabled={current >= total}>
+    Next →
+  </button>
+</nav>
+
+<script>
+  const root = document.querySelector('[data-component="hw-pagination"]');
+  if (root) {
+    const prev = root.querySelector('[data-action="prev"]');
+    const next = root.querySelector('[data-action="next"]');
+    const count = root.querySelector('.page-count');
+
+    const update = (newPage: number) => {
+      root.dispatchEvent(new CustomEvent('page-change', { detail: { page: newPage } }));
+    };
+
+    (prev as HTMLButtonElement)?.addEventListener('click', () => {
+      const current = parseInt(count?.textContent?.split('/')[0]?.trim() ?? '1', 10);
+      if (current > 1) update(current - 1);
+    });
+
+    (next as HTMLButtonElement)?.addEventListener('click', () => {
+      const parts = count?.textContent?.split('/') ?? ['1', '1'];
+      const current = parseInt(parts[0]?.trim() ?? '1', 10);
+      const total = parseInt(parts[1]?.trim() ?? '1', 10);
+      if (current < total) update(current + 1);
+    });
+  }
+</script>
+
+<style>
+  .hw-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .page-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+
+  .page-btn:hover:not(:disabled) {
+    background: #f5f4f0;
+  }
+
+  .page-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+</style>
