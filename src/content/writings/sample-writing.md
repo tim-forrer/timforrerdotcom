@@ -2,7 +2,9 @@
 title: "Building with Astro in 2026"
 date: 2026-06-10
 tags: [astro, webdev]
-hero: "/photos/placeholders/temp-img.jpg"
+handwriting:
+  - "/writings/sample-writing/p1.png"
+  - "/writings/sample-writing/p2.png"
 description: "Getting started with the best static site generator."
 ---
 

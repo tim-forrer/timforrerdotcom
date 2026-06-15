@@ -10,6 +10,7 @@ const writings = defineCollection({
     tags: z.array(z.string()).default([]),
     hero: z.string().optional(),
     description: z.string().optional(),
+    handwriting: z.array(z.string()).optional(),
   }),
 });
 
