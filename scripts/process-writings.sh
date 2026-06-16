@@ -47,15 +47,23 @@ done
 shopt -u nullglob
 
 echo "Running OCR..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL=$(curl -s http://localhost:1234/v1/models | jq -r '.data[0].id')
-PROMPT=$(cat scripts/ocr-prompt.md)
+if [ -z "$MODEL" ] || [ "$MODEL" = "null" ]; then
+    echo "Error: Could not retrieve model from LMStudio"
+    exit 1
+fi
+PROMPT=$(cat "$SCRIPT_DIR/ocr-prompt.md")
 OUTPUT_FILE="src/content/writings/$SLUG.md"
 
+mkdir -p "$(dirname "$OUTPUT_FILE")"
 echo "" > "$OUTPUT_FILE"
 
 shopt -s nullglob
 for file in "$OCR_TEMP_DIR"/*.png; do
-    IMAGE_BASE64=$(base64 -i "$file")
+    filename=$(basename "$file")
+    echo "Processing $filename..."
+    IMAGE_BASE64=$(base64 -b -i "$file")
     
     JSON_PAYLOAD=$(jq -n \
         --arg model "$MODEL" \
@@ -63,11 +71,23 @@ for file in "$OCR_TEMP_DIR"/*.png; do
         --arg image "$IMAGE_BASE64" \
         '{model: $model, messages: [{role: "user", content: [{type: "text", text: $prompt}, {type: "image_url", image_url: {url: ("data:image/png;base64," + $image)}}]}]}')
     
-    curl -s http://localhost:1234/v1/chat/completions \
+    RESPONSE=$(curl -s http://localhost:1234/v1/chat/completions \
         -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD" | jq -r '.choices[0].message.content' >> "$OUTPUT_FILE"
+        -d "$JSON_PAYLOAD")
+    
+    if [ -z "$RESPONSE" ] || ! echo "$RESPONSE" | jq -e '.choices[0].message.content' > /dev/null 2>&1; then
+        echo "Warning: OCR failed for $filename"
+        continue
+    fi
+    
+    echo "$RESPONSE" | jq -r '.choices[0].message.content' >> "$OUTPUT_FILE"
 done
 shopt -u nullglob
+
+if [ ! -s "$OUTPUT_FILE" ]; then
+    rm -f "$OUTPUT_FILE"
+    echo "Warning: No OCR output generated"
+fi
 
 echo "Cleanup..."
 rm -rf "$RAW_DIR" "$OCR_TEMP_DIR"
