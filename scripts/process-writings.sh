@@ -22,5 +22,13 @@ fi
 
 echo "Pipeline started for $SLUG..."
 
-# Placeholder for Task 2 & 3 logic
+mkdir -p "$DISPLAY_DIR"
+
+echo "Processing display images..."
+for file in "$RAW_DIR"/*.png; do
+    filename=$(basename "$file")
+    magick "$file" -rotate -90 -resize 1024x "$DISPLAY_DIR/$filename"
+done
+
+# Placeholder for Task 3 OCR logic
 echo "Pipeline complete for $SLUG."
