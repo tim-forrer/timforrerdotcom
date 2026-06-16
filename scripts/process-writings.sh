@@ -57,13 +57,14 @@ PROMPT=$(cat "$SCRIPT_DIR/ocr-prompt.md")
 OUTPUT_FILE="src/content/writings/$SLUG.md"
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
-echo "" > "$OUTPUT_FILE"
+> "$OUTPUT_FILE"
 
+OCR_SUCCESS=true
 shopt -s nullglob
 for file in "$OCR_TEMP_DIR"/*.png; do
     filename=$(basename "$file")
     echo "Processing $filename..."
-    IMAGE_BASE64=$(base64 -b -i "$file")
+    IMAGE_BASE64=$(base64 -b -i "$file") || { echo "Warning: base64 failed for $filename"; OCR_SUCCESS=false; continue; }
     
     JSON_PAYLOAD=$(jq -n \
         --arg model "$MODEL" \
@@ -73,23 +74,31 @@ for file in "$OCR_TEMP_DIR"/*.png; do
     
     RESPONSE=$(curl -s http://localhost:1234/v1/chat/completions \
         -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD")
+        -d "$JSON_PAYLOAD") || { echo "Warning: curl failed for $filename"; OCR_SUCCESS=false; continue; }
     
     if [ -z "$RESPONSE" ] || ! echo "$RESPONSE" | jq -e '.choices[0].message.content' > /dev/null 2>&1; then
         echo "Warning: OCR failed for $filename"
+        OCR_SUCCESS=false
         continue
     fi
     
     echo "$RESPONSE" | jq -r '.choices[0].message.content' >> "$OUTPUT_FILE"
+    echo "" >> "$OUTPUT_FILE"
 done
 shopt -u nullglob
 
 if [ ! -s "$OUTPUT_FILE" ]; then
     rm -f "$OUTPUT_FILE"
     echo "Warning: No OCR output generated"
+    OCR_SUCCESS=false
 fi
 
 echo "Cleanup..."
-rm -rf "$RAW_DIR" "$OCR_TEMP_DIR"
+if [ "$OCR_SUCCESS" = true ]; then
+    rm -rf "$RAW_DIR" "$OCR_TEMP_DIR"
+else
+    echo "Warning: OCR had failures — preserving raw files in $RAW_DIR"
+    rm -rf "$OCR_TEMP_DIR"
+fi
 
 echo "Pipeline complete for $SLUG."
