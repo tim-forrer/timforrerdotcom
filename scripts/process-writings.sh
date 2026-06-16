@@ -25,10 +25,14 @@ echo "Pipeline started for $SLUG..."
 mkdir -p "$DISPLAY_DIR"
 
 echo "Processing display images..."
+shopt -s nullglob
 for file in "$RAW_DIR"/*.png; do
     filename=$(basename "$file")
-    magick "$file" -rotate -90 -resize 1024x "$DISPLAY_DIR/$filename"
+    if ! magick "$file" -rotate -90 -resize 1024x "$DISPLAY_DIR/$filename"; then
+        echo "Warning: Failed to process $filename"
+    fi
 done
+shopt -u nullglob
 
 # Placeholder for Task 3 OCR logic
 echo "Pipeline complete for $SLUG."
