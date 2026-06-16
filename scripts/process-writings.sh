@@ -34,5 +34,42 @@ for file in "$RAW_DIR"/*.png; do
 done
 shopt -u nullglob
 
-# Placeholder for Task 3 OCR logic
+mkdir -p "$OCR_TEMP_DIR"
+
+echo "Processing OCR images..."
+shopt -s nullglob
+for file in "$RAW_DIR"/*.png; do
+    filename=$(basename "$file")
+    if ! magick "$file" -flatten -type TrueColor -define png:color-type=2 -resize 480x "$OCR_TEMP_DIR/$filename"; then
+        echo "Warning: Failed to process OCR image $filename"
+    fi
+done
+shopt -u nullglob
+
+echo "Running OCR..."
+MODEL=$(curl -s http://localhost:1234/v1/models | jq -r '.data[0].id')
+PROMPT=$(cat scripts/ocr-prompt.md)
+OUTPUT_FILE="src/content/writings/$SLUG.md"
+
+echo "" > "$OUTPUT_FILE"
+
+shopt -s nullglob
+for file in "$OCR_TEMP_DIR"/*.png; do
+    IMAGE_BASE64=$(base64 -i "$file")
+    
+    JSON_PAYLOAD=$(jq -n \
+        --arg model "$MODEL" \
+        --arg prompt "$PROMPT" \
+        --arg image "$IMAGE_BASE64" \
+        '{model: $model, messages: [{role: "user", content: [{type: "text", text: $prompt}, {type: "image_url", image_url: {url: ("data:image/png;base64," + $image)}}]}]}')
+    
+    curl -s http://localhost:1234/v1/chat/completions \
+        -H "Content-Type: application/json" \
+        -d "$JSON_PAYLOAD" | jq -r '.choices[0].message.content' >> "$OUTPUT_FILE"
+done
+shopt -u nullglob
+
+echo "Cleanup..."
+rm -rf "$RAW_DIR" "$OCR_TEMP_DIR"
+
 echo "Pipeline complete for $SLUG."
