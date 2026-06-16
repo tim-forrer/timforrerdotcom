@@ -5,6 +5,12 @@
 set -e
 
 SLUG=$1
+
+if [ -z "$SLUG" ]; then
+    echo "Usage: $0 <slug>"
+    exit 1
+fi
+
 RAW_DIR="public/writings/$SLUG/raw"
 DISPLAY_DIR="public/writings/$SLUG"
 OCR_TEMP_DIR="/tmp/ocr-processing-$SLUG"
