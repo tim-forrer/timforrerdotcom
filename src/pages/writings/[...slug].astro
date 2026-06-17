@@ -68,11 +68,11 @@ const hasHandwriting = handwritingPages.length > 0;
               src={src}
               alt=""
               data-page={i}
-              style={{ display: i === 0 ? 'block' : 'none' }}
+              style={{ display: i < 2 ? 'block' : 'none' }}
             />
           ))}
         </div>
-        <HWPagination current={1} total={handwritingPages.length} />
+        <HWPagination current={1} total={Math.ceil(handwritingPages.length / 2)} />
       </div>
     )}
 
@@ -94,7 +94,31 @@ const hasHandwriting = handwritingPages.length > 0;
     if (toggle && originalView && textView && container) {
       const pages = container.querySelectorAll('.hw-page');
       const totalPages = pages.length;
-      let currentPage = 1;
+      let anchorPage = 1;
+
+      const wideMq = window.matchMedia('(min-width: 1024px)');
+
+      function render() {
+        const wide = wideMq.matches;
+        const visibleCount = wide ? Math.min(2, totalPages - anchorPage + 1) : 1;
+
+        pages.forEach((p, i) => {
+          p.style.display = (i >= anchorPage - 1 && i < anchorPage - 1 + visibleCount) ? 'block' : 'none';
+        });
+
+        const spread = wide ? Math.ceil(anchorPage / 2) : anchorPage;
+        const total = wide ? Math.ceil(totalPages / 2) : totalPages;
+
+        const pagination = document.querySelector('[data-component="hw-pagination"]');
+        if (pagination) {
+          const count = pagination.querySelector('.page-count');
+          if (count) count.textContent = spread + ' / ' + total;
+          const prev = pagination.querySelector('[data-action="prev"]');
+          const next = pagination.querySelector('[data-action="next"]');
+          if (prev) prev.disabled = spread <= 1;
+          if (next) next.disabled = spread >= total;
+        }
+      }
 
       function showView(view) {
         if (view === 'original') {
@@ -106,40 +130,33 @@ const hasHandwriting = handwritingPages.length > 0;
         }
       }
 
-      function showPage(n) {
-        currentPage = n;
-        pages.forEach((p, i) => {
-          p.style.display = i === n - 1 ? 'block' : 'none';
-        });
-        const pagination = document.querySelector('[data-component="hw-pagination"]');
-        if (pagination) {
-          const count = pagination.querySelector('.page-count');
-          if (count) count.textContent = currentPage + ' / ' + totalPages;
-          const prev = pagination.querySelector('[data-action="prev"]');
-          const next = pagination.querySelector('[data-action="next"]');
-          if (prev) prev.disabled = currentPage <= 1;
-          if (next) next.disabled = currentPage >= totalPages;
-        }
-      }
-
       toggle.addEventListener('view-toggle', ((e) => {
         showView(e.detail.view);
-        if (e.detail.view === 'original') showPage(1);
+        if (e.detail.view === 'original') {
+          anchorPage = 1;
+          render();
+        }
       }) as EventListener);
+
+      wideMq.addEventListener('change', render);
 
       const pagination = document.querySelector('[data-component="hw-pagination"]');
       if (pagination) {
         pagination.addEventListener('page-change', ((e) => {
-          showPage(e.detail.page);
-        }) as EventListener);
+        const desiredSpread = e.detail.page;
+        anchorPage = wideMq.matches ? (desiredSpread - 1) * 2 + 1 : desiredSpread;
+        render();
+      }) as EventListener);
       }
+
+      // Override server-side initial render
+      render();
     }
   </script>
 )}
 
 <style>
   .writing {
-    max-width: 640px;
     margin: 0 auto;
     padding-bottom: 60px;
   }
@@ -210,6 +227,18 @@ const hasHandwriting = handwritingPages.length > 0;
     max-width: 100%;
     height: auto;
     display: block;
+  }
+
+  @media (min-width: 1024px) {
+    .hw-container {
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .hw-page {
+      width: calc(50% - 4px);
+    }
   }
 
   .text-content {
