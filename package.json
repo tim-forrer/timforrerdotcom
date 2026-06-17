@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "build": "node scripts/generate-photos.js && astro build",
+    "preview": "astro preview",
+    "photos": "node scripts/generate-photos.js"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",

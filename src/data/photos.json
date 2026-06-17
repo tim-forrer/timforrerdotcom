@@ -1,0 +1,51 @@
+[
+  {
+    "slug": "featured",
+    "title": "Featured",
+    "cover": "/photos/chengdu/panda.jpg",
+    "photos": [
+      {
+        "src": "/photos/chengdu/panda.jpg",
+        "title": "panda"
+      },
+      {
+        "src": "/photos/yoshino/20260414_0019.JPG",
+        "title": "20260414_0019"
+      },
+      {
+        "src": "/photos/yoshino/20260414_0066.JPG",
+        "title": "20260414_0066"
+      }
+    ]
+  },
+  {
+    "slug": "chengdu",
+    "title": "Chengdu",
+    "cover": "/photos/chengdu/panda.jpg",
+    "photos": [
+      {
+        "src": "/photos/chengdu/panda.jpg",
+        "title": "panda"
+      }
+    ]
+  },
+  {
+    "slug": "yoshino",
+    "title": "Yoshino",
+    "cover": "/photos/yoshino/20260414_0019.JPG",
+    "photos": [
+      {
+        "src": "/photos/yoshino/20260414_0019.JPG",
+        "title": "20260414_0019"
+      },
+      {
+        "src": "/photos/yoshino/20260414_0066.JPG",
+        "title": "20260414_0066"
+      },
+      {
+        "src": "/photos/yoshino/20260414_0192.JPG",
+        "title": "20260414_0192"
+      }
+    ]
+  }
+]

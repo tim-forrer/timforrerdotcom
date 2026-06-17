@@ -1,0 +1,25 @@
+---
+title: "12 Hours w/ the Supernote Nomad"
+date: 2026-06-16
+tags: [supernote, reflections]
+handwriting:
+  - "/writings/12-hours-with-nomad/p1.png"
+  - "/writings/12-hours-with-nomad/p2.png"
+  - "/writings/12-hours-with-nomad/p3.png"
+  - "/writings/12-hours-with-nomad/p4.png"
+  - "/writings/12-hours-with-nomad/p5.png"
+description: "Reflections after one day of using the Supernote Nomad."
+---
+
+It's a bit strange to be honest. I've thought for a long time about getting a Supernote. I first heard of them about 2.5 years ago: right around when the Nomad first came out. I was very keen to get one too but they weren't available on Amazon so for expectedly obscure bureaucratic reasons it was "difficult" to purchase w/ research funding. I made the decision at the time, therefore, to go for the Kindle Scribe. That is the only other E-ink device that I have reference to, so that is my main point of comparison.
+
+I said at the start that it was strange but then went on a bit of a tangent and never explained what was strange so let me go on another tangent to explain.
+I've always been someone who's been excited by new tech. I suppose most people are, so it's probably easy for you to imagine what I mean. When I first got an iPad I thought it was the bee's knees, it filled me head to toe with excitement. Why? What do you mean, "why?" It's an iPad Pro! The pinacle [sic] of human ingenuity!
+What could be better? For one week, I was smitten.
+Four years on? I can't think of one truly great experience it brought me. It is fantastic, yes, but there's nothing I really want to do with it. It sits, weeks or even months at a time, unused. To be honest, a part of me is looking forward to giving it back when I graduate in a few months. I know it'll be sat on a shelf somewhere else not being used, but I won't feel guilty anymore about it lying on my desk. Perhaps that's selfish of me, but perhaps that's a hint at why new tech is so tempting. "Look at how powerful this is! Look at everything it can do! If you aren't able to find a use for it, it's because there's something wrong with your workflow; you need to adopt your lifestyle! Don't worry, here's a newer, even more powerful device. Get this and you'll definitely improve your life!" I see how much something "benefits everyone else" so it must benefit me too. But without a clearly defined way that it will benefit me, I get bored, and forget about it, until I spot it and in my guilt try to see if a new software update has solved all my woes. It never has.
+What, then, makes the Supernote different? Isn't it naïve to write this a mere 12 hours after getting it?
+Yes, it probably is. But what makes it different is that I waited for this. Not by choice, admittedly, but I waited all the same. And so when the Nomad finally sat atop my desk, I was not excited. Not in my usual way at least. And that was strange. But I think I know why. When I got the idea, what got me excited was potential - imagining all that I might be able to do.
+With the Nomad, I've been watching reviews and reading articles about it for years. I knew what it can do, and what it can't. There is no mystery. So in that sense there is no excitement. But maybe that makes all the difference.
+
+That's not to say that it's exactly as expected, and I set it up exactly how I wanted. I wasted the best part of two hours and sideloaded four apps to get a file transfer app on here, just to realise the provided one was more than enough for what I wanted."
+But I got this thing to write on, and maybe draw on too. And that's exactly what I'm doing. But if that's what I want to do, then what's wrong with the iPad, or the Kindle Scribe? Well, the iPad, for me, was a horrible writing experience. I just did not like how slippery the pen was, how hard the glass was, and how the Notes app worked. It just never felt anything more than a complete mess. Maybe that's a me problem, but that's just how I felt. I did try a "paper-like" screen cover but it made the screen look worse and always made me aware I was destroying my iPad tip with how scratchy it was. The Kindle? Well it have a better feel so that was good, but there are too many reasons not to like it. It's extremely locked down, build quality was poor, I couldn't connect to a WiFi network if the password began with a digit, I couldn't save multiple WiFi networks, organization of notes was a mess, hard to export audiovis. Most annoying for me though, the pen nib wore down so quickly and left bits everywhere. That was the worst of all, and probably the #1 reason I felt confident that a Supernote would work for me. Sure, two finger-gesture is a bit hit-or-miss, and I can't stand to hold the folio in my hand for a long time but aside from that, it's been fantastic. Notes are easily organised, I love the UI, the Partner app works well, I get easy exports &ndash; and an everlasting nib! An everlasting nib. Amazing. I'm grateful in anyway to the Kindle Scribe, because I appreciate this Nomad so much more as a result! And that's what I think will make a difference this time. I'm not excited to use this device &ndash; I'm grateful to :)

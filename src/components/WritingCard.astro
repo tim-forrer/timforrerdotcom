@@ -36,7 +36,6 @@ const hasThumb = !!thumbSrc;
     aspect-ratio: 1;
     border-radius: var(--radius-sm);
     overflow: hidden;
-    background: #e0e0e0;
     margin-bottom: 6px;
   }
 
@@ -44,6 +43,7 @@ const hasThumb = !!thumbSrc;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
   }
 
   .title {
@@ -55,7 +55,7 @@ const hasThumb = !!thumbSrc;
   }
 
   .meta {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text-muted);
   }
 </style>

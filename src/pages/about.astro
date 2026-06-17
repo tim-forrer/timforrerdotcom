@@ -1,23 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Timeline from '../components/Timeline.astro';
-
-const historyEntries = [
-  { title: 'Swindon', year: '1998' },
-  { title: 'Reading', year: '2000' },
-  { title: 'Durham', year: '2017' },
-  { title: 'Tokyo', year: '2021' },
-];
 ---
 
 <BaseLayout page="about" title="About">
   <section class="about-page">
     <div class="bio reveal">
-      <p>I'm based in the Pacific Northwest. I build things, take photos, and write about both. When I'm not at a keyboard, I'm usually hiking with a camera.</p>
+      <p>Someone who enjoys taking photos and writing nonsense. Thinking about drawing too.</p>
+      <p>All photos were generated inside my camera, and all thoughts are very much my own (for better or for worse).</p>
     </div>
 
-    <div class="timeline-section reveal">
-      <Timeline entries={historyEntries} />
+    <div class="gear-section reveal">
+      <h2>Current Gear</h2>
+      <div class="gear-category">
+        <h3>Cameras</h3>
+        <p>Nikon Zf, Fujifilm instax mini Evo</p>
+      </div>
+      <div class="gear-category">
+        <h3>Lenses</h3>
+        <p>Nikkor 40mm f/2, ZNONZ II 20-6L, SMC Takumar 50mm (hopefully not radioactive)</p>
+      </div>
+      <div class="gear-category">
+        <h3>Writing Equipment</h3>
+        <p>Supernote Nomad, Supernote Pushup Pen</p>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -29,15 +34,49 @@ const historyEntries = [
 
   .bio {
     max-width: 600px;
-    margin: 0 auto 36px;
+    margin: 0 auto 48px;
   }
 
   .bio p {
     color: var(--text-title);
   }
 
-  .timeline-section {
-    margin-bottom: 48px;
+  .gear-section {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .gear-section h2 {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .gear-category {
+    margin-bottom: 16px;
+  }
+
+  .gear-category:last-child {
+    margin-bottom: 0;
+  }
+
+  .gear-category h3 {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin: 0 0 4px;
+  }
+
+  .gear-category p {
+    margin: 0;
+    color: var(--text-title);
   }
 
 </style>

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CollectionPicker from '../../components/CollectionPicker.astro';
-import PhotoCard from '../../components/PhotoCard.astro';
+import Lightbox from '../../components/Lightbox.astro';
 import { photoCollections, getCollectionBySlug } from '../../data/photos';
 import type { GetStaticPaths } from 'astro';
 
@@ -30,6 +30,7 @@ const col = getCollectionBySlug(collection.slug);
       ))}
     </div>
   </section>
+  <Lightbox />
 </BaseLayout>
 
 <style>
@@ -46,7 +47,7 @@ const col = getCollectionBySlug(collection.slug);
 
   .collection-label {
     font-family: system-ui, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text-label);
     text-transform: uppercase;
     letter-spacing: 1px;
