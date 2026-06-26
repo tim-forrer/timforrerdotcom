@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",
-    "astro": "^6.4.5"
+    "astro": "^6.4.5",
+    "katex": "^0.17.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.2"

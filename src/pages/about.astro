@@ -41,6 +41,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     color: var(--text-title);
   }
 
+  @media (max-width: 600px) {
+    .bio p {
+      font-size: 19px;
+      line-height: 1.7;
+    }
+  }
+
   .gear-section {
     max-width: 600px;
     margin: 0 auto;
@@ -77,6 +84,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .gear-category p {
     margin: 0;
     color: var(--text-title);
+  }
+
+  @media (max-width: 600px) {
+    .gear-category p {
+      font-size: 19px;
+      line-height: 1.7;
+    }
   }
 
 </style>

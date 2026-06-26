@@ -8,7 +8,6 @@ const writings = defineCollection({
     title: z.string(),
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
-    hero: z.string().optional(),
     description: z.string().optional(),
     handwriting: z.array(z.string()).optional(),
   }),

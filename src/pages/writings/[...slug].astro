@@ -80,9 +80,30 @@ const hasHandwriting = handwritingPages.length > 0;
       <div class="text-content">
         <Content />
       </div>
+      <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top">
+        <span aria-hidden="true">&uarr;</span>
+      </button>
     </div>
   </article>
 </BaseLayout>
+
+<script>
+  const backToTop = document.getElementById('back-to-top');
+  if (backToTop) {
+    const update = () => {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    update();
+  }
+</script>
 
 {hasHandwriting && (
   <script>
@@ -246,32 +267,51 @@ const hasHandwriting = handwritingPages.length > 0;
     color: var(--text);
   }
 
-  .text-content h2 {
+  @media (max-width: 600px) {
+    .text-content {
+      font-size: 19px;
+      line-height: 1.7;
+    }
+  }
+
+  .text-content :global(h2) {
     font-size: 30px;
     margin: 28px 0 12px;
     color: var(--text-title);
   }
 
-  .text-content h3 {
+  .text-content :global(h3) {
     font-size: 27px;
     margin: 20px 0 8px;
     color: var(--text-title);
   }
 
-  .text-content p {
+  @media (max-width: 600px) {
+    .text-content :global(h2) {
+      font-size: 24px;
+      margin: 22px 0 10px;
+    }
+
+    .text-content :global(h3) {
+      font-size: 22px;
+      margin: 18px 0 6px;
+    }
+  }
+
+  .text-content :global(p) {
     margin-bottom: 16px;
   }
 
-  .text-content ul,
-  .text-content ol {
+  .text-content :global(ul),
+  .text-content :global(ol) {
     margin: 0 0 16px 24px;
   }
 
-  .text-content li {
+  .text-content :global(li) {
     margin-bottom: 4px;
   }
 
-  .text-content code {
+  .text-content :global(code) {
     font-family: 'SF Mono', 'Fira Code', monospace;
     font-size: 14px;
     background: #f0f0f0;
@@ -279,7 +319,7 @@ const hasHandwriting = handwritingPages.length > 0;
     border-radius: 3px;
   }
 
-  .text-content pre {
+  .text-content :global(pre) {
     background: #f5f5f5;
     padding: 16px;
     border-radius: var(--radius-md);
@@ -287,12 +327,12 @@ const hasHandwriting = handwritingPages.length > 0;
     margin-bottom: 16px;
   }
 
-  .text-content pre code {
+  .text-content :global(pre) :global(code) {
     background: none;
     padding: 0;
   }
 
-  .text-content blockquote {
+  .text-content :global(blockquote) {
     border-left: 3px solid var(--border);
     padding-left: 16px;
     color: var(--text-secondary);
@@ -300,9 +340,60 @@ const hasHandwriting = handwritingPages.length > 0;
     margin-bottom: 16px;
   }
 
-  .text-content a {
+  .text-content :global(table) {
+    border-collapse: collapse;
+    margin: 8px auto 20px;
+  }
+
+  .text-content :global(thead) {
+    display: none;
+  }
+
+  .text-content :global(td) {
+    padding: 6px 18px;
+    text-align: center;
+    border: none;
+  }
+
+  @media (max-width: 600px) {
+    .text-content :global(td) {
+      padding: 4px 10px;
+    }
+  }
+
+  .text-content :global(a) {
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 10;
+  }
+
+  .back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .back-to-top:hover {
+    background: var(--accent);
+    color: #fff;
   }
 </style>

@@ -19,10 +19,13 @@ const featuredPhoto = getFeaturedPhotos()[0];
     inset: 0;
     z-index: -1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     width: var(--content-width);
     margin: 0 auto;
+    padding-top: 240px;
+    padding-bottom: 170px;
+    box-sizing: border-box;
   }
 
   .hero-image {
@@ -35,6 +38,19 @@ const featuredPhoto = getFeaturedPhotos()[0];
     aspect-ratio: 4 / 3;
     object-fit: cover;
     width: 100%;
+    max-height: calc(100vh - 410px);
     display: block;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      align-items: center;
+      padding-top: 70px;
+      padding-bottom: 0;
+    }
+
+    .hero-image img {
+      max-height: calc(100vh - 200px);
+    }
   }
 </style>
