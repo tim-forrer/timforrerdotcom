@@ -9,7 +9,6 @@ const { current } = Astro.props;
 ---
 
 <select class="collection-picker" onchange="if (this.value) window.location.href = this.value">
-  <option value="">Go to collection…</option>
   {photoCollections.map((col) => (
     <option value={`/photos/${col.slug}`} selected={col.slug === current}>{col.title}</option>
   ))}
