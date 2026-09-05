@@ -10,12 +10,14 @@ export interface PhotoCollection {
   photos: Photo[];
 }
 
-import collections from './photos.json';
+import data from './photos.json';
 
-export const photoCollections: PhotoCollection[] = collections;
+export const homepagePhoto: string | null = data.homepage;
 
-export function getFeaturedPhotos(): Photo[] {
-  return photoCollections[0]?.photos ?? [];
+export const photoCollections: PhotoCollection[] = data.collections;
+
+export function getFeaturedCollection(): PhotoCollection | undefined {
+  return photoCollections.find((c) => c.slug === 'featured');
 }
 
 export function getCollectionBySlug(slug: string): PhotoCollection | undefined {

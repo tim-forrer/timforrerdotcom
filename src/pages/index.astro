@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getFeaturedPhotos } from '../data/photos';
+import { homepagePhoto } from '../data/photos';
 
-const featuredPhoto = getFeaturedPhotos()[0];
 ---
 
 <BaseLayout title="Home">
   <section class="hero">
     <div class="hero-image">
-      <img src={featuredPhoto?.src ?? '/photos/placeholder.jpg'} alt="Featured photo" />
+      <img src={homepagePhoto ?? '/photos/placeholder.svg'} alt="Featured photo" />
     </div>
   </section>
 </BaseLayout>

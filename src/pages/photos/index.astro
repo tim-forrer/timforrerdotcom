@@ -1,3 +1,94 @@
 ---
-return Astro.redirect('/photos/featured');
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { photoCollections } from '../../data/photos';
 ---
+
+<BaseLayout page="photos" title="Photos">
+  <section class="photos-landing">
+    {photoCollections.length > 0 ? (
+      <div class="cover-grid reveal">
+        {photoCollections.map((col, i) => (
+          <a href={`/photos/${col.slug}`} class="cover-card">
+            <div class="cover-img">
+              <img src={col.cover} alt="" />
+            </div>
+            <span class="label">{col.title}</span>
+            {col.slug === 'featured' && (
+              <span class="featured-note">{col.photos.length} photos</span>
+            )}
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="empty">No photos yet. Add images to a themed folder in <code>public/photos</code>.</p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .photos-landing {
+    padding-bottom: 40px;
+  }
+
+  .cover-grid {
+    column-count: 2;
+    column-gap: 20px;
+  }
+
+  .cover-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    break-inside: avoid;
+    margin-bottom: 20px;
+    transition: opacity 0.2s ease;
+  }
+
+  .cover-img {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #e0e0e0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .cover-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .label {
+    display: block;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .label::first-letter {
+    text-transform: uppercase;
+  }
+
+  .featured-note {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .empty {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-family: system-ui, sans-serif;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  @media (min-width: 600px) {
+    .cover-grid {
+      column-count: 3;
+    }
+  }
+</style>

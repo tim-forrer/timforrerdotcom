@@ -3,26 +3,32 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const PHOTOS_DIR = path.resolve(process.cwd(), 'public/photos');
-const FEATURED_CONFIG = path.resolve(process.cwd(), 'photos/featured.json');
-const OUTPUT_FILE = path.resolve(process.cwd(), 'src/data/photos.json');
+const ROOT = process.cwd();
+const PHOTOS_DIR = path.resolve(ROOT, 'public/photos');
+const CONFIG_DIR = path.resolve(ROOT, 'photos');
+const ORDER_FILE = path.resolve(CONFIG_DIR, 'order.json');
+const FEATURED_FILE = path.resolve(CONFIG_DIR, 'featured.json');
+const HOMEPAGE_FILE = path.resolve(CONFIG_DIR, 'homepage.json');
+const OUTPUT_FILE = path.resolve(ROOT, 'src/data/photos.json');
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 
-function generateCollections() {
-  const entries = fs.readdirSync(PHOTOS_DIR, { withFileTypes: true });
-  const collections = [];
+function titleCase(slug) {
+  return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
 
+function generateThemeCollections() {
+  const entries = fs.readdirSync(PHOTOS_DIR, { withFileTypes: true });
+
+  const collections = [];
   for (const entry of entries) {
     if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'placeholders') {
       continue;
     }
-
     const dirPath = path.join(PHOTOS_DIR, entry.name);
     const files = fs.readdirSync(dirPath).filter(file => {
       const ext = path.extname(file).toLowerCase();
       return IMAGE_EXTENSIONS.includes(ext);
     });
-
     if (files.length === 0) continue;
 
     const photos = files.map(file => ({
@@ -32,42 +38,64 @@ function generateCollections() {
 
     collections.push({
       slug: entry.name,
-      title: entry.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+      title: titleCase(entry.name),
       cover: photos[0].src,
       photos,
     });
   }
 
-  return collections;
+  // Apply the desired order from photos/order.json (listed slugs first, in that order).
+  let order = [];
+  if (fs.existsSync(ORDER_FILE)) {
+    order = JSON.parse(fs.readFileSync(ORDER_FILE, 'utf-8'));
+  }
+  const bySlug = new Map(collections.map(c => [c.slug, c]));
+  const ordered = [];
+  for (const slug of order) {
+    if (bySlug.has(slug)) ordered.push(bySlug.get(slug));
+  }
+  // Any collections not in the order file, in their original folder order.
+  const unordered = collections.filter(c => !order.includes(c.slug));
+  return [...ordered, ...unordered];
 }
 
-function generateFeatured(allCollections) {
-  if (!fs.existsSync(FEATURED_CONFIG)) {
-    return null;
-  }
+function loadSrcs(photos) {
+  return photos.map(p => p.src);
+}
 
-  const config = JSON.parse(fs.readFileSync(FEATURED_CONFIG, 'utf-8'));
-  const allPhotos = allCollections.flatMap(c => c.photos);
-  const photos = config.photos
-    .map(src => allPhotos.find(p => p.src === src))
+function buildSubset(configFile, titleKey, allSrcs) {
+  if (!fs.existsSync(configFile)) return null;
+  const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+  const src = config.photo ?? config.photos;
+  const list = Array.isArray(src) ? src : [src];
+  const items = list
+    .filter(Boolean)
+    .map(s => allSrcs.find(p => p.src === s))
     .filter(Boolean);
-
-  if (photos.length === 0) return null;
-
+  if (items.length === 0) return null;
   return {
-    slug: 'featured',
-    title: config.title || 'Featured',
-    cover: photos[0].src,
-    photos,
+    slug: configFile === HOMEPAGE_FILE ? 'homepage' : 'featured',
+    title: config.title || (configFile === HOMEPAGE_FILE ? 'Homepage' : 'Featured'),
+    cover: items[0].src,
+    photos: items,
   };
 }
 
-const allCollections = generateCollections();
-const featured = generateFeatured(allCollections);
+const themeCollections = generateThemeCollections();
+const allSrcs = themeCollections.flatMap(c => c.photos);
 
-const collections = featured 
-  ? [featured, ...allCollections]
-  : allCollections;
+const featured = buildSubset(FEATURED_FILE, 'title', allSrcs);
+const homepage = buildSubset(HOMEPAGE_FILE, 'photo', allSrcs);
 
-fs.writeFileSync(OUTPUT_FILE, JSON.stringify(collections, null, 2));
-console.log(`Generated ${collections.length} collections (${featured ? 'featured + ' : ''}${allCollections.length} folders) to ${OUTPUT_FILE}`);
+const collections = featured ? [featured, ...themeCollections] : themeCollections;
+
+const payload = {
+  homepage: homepage ? homepage.cover : null,
+  collections,
+};
+
+fs.writeFileSync(OUTPUT_FILE, JSON.stringify(payload, null, 2));
+console.log(
+  `Generated ${collections.length} collection(s) (${featured ? 'featured + ' : ''}${themeCollections.length} themes). ` +
+  `Homepage: ${homepage ? homepage.cover : 'not set'}.`
+);

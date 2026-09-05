@@ -1,51 +1,66 @@
-[
-  {
-    "slug": "featured",
-    "title": "Featured",
-    "cover": "/photos/chengdu/panda.jpg",
-    "photos": [
-      {
-        "src": "/photos/chengdu/panda.jpg",
-        "title": "panda"
-      },
-      {
-        "src": "/photos/yoshino/20260414_0019.JPG",
-        "title": "20260414_0019"
-      },
-      {
-        "src": "/photos/yoshino/20260414_0066.JPG",
-        "title": "20260414_0066"
-      }
-    ]
-  },
-  {
-    "slug": "chengdu",
-    "title": "Chengdu",
-    "cover": "/photos/chengdu/panda.jpg",
-    "photos": [
-      {
-        "src": "/photos/chengdu/panda.jpg",
-        "title": "panda"
-      }
-    ]
-  },
-  {
-    "slug": "yoshino",
-    "title": "Yoshino",
-    "cover": "/photos/yoshino/20260414_0019.JPG",
-    "photos": [
-      {
-        "src": "/photos/yoshino/20260414_0019.JPG",
-        "title": "20260414_0019"
-      },
-      {
-        "src": "/photos/yoshino/20260414_0066.JPG",
-        "title": "20260414_0066"
-      },
-      {
-        "src": "/photos/yoshino/20260414_0192.JPG",
-        "title": "20260414_0192"
-      }
-    ]
-  }
-]
+{
+  "homepage": "/photos/animals/panda.jpg",
+  "collections": [
+    {
+      "slug": "animals",
+      "title": "Animals",
+      "cover": "/photos/animals/20260827_0110.jpg",
+      "photos": [
+        {
+          "src": "/photos/animals/20260827_0110.jpg",
+          "title": "20260827_0110"
+        },
+        {
+          "src": "/photos/animals/20260827_0139.jpg",
+          "title": "20260827_0139"
+        },
+        {
+          "src": "/photos/animals/20260827_0175.jpg",
+          "title": "20260827_0175"
+        },
+        {
+          "src": "/photos/animals/panda.jpg",
+          "title": "panda"
+        }
+      ]
+    },
+    {
+      "slug": "clouds",
+      "title": "Clouds",
+      "cover": "/photos/clouds/20260827_0222.jpg",
+      "photos": [
+        {
+          "src": "/photos/clouds/20260827_0222.jpg",
+          "title": "20260827_0222"
+        },
+        {
+          "src": "/photos/clouds/20260827_0230.jpg",
+          "title": "20260827_0230"
+        },
+        {
+          "src": "/photos/clouds/20260827_0231.jpg",
+          "title": "20260827_0231"
+        }
+      ]
+    },
+    {
+      "slug": "nature",
+      "title": "Nature",
+      "cover": "/photos/nature/20260414_0019.JPG",
+      "photos": [
+        {
+          "src": "/photos/nature/20260414_0019.JPG",
+          "title": "20260414_0019"
+        },
+        {
+          "src": "/photos/nature/20260414_0066.JPG",
+          "title": "20260414_0066"
+        },
+        {
+          "src": "/photos/nature/20260414_0192.JPG",
+          "title": "20260414_0192"
+        }
+      ]
+    }
+  ]
+}
