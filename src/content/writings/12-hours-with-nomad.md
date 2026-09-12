@@ -1,7 +1,6 @@
 ---
 title: "12 Hours w/ the Supernote Nomad"
 date: 2026-06-16
-tags: [supernote, reflections]
 handwriting:
   - "/writings/12-hours-with-nomad/p1.png"
   - "/writings/12-hours-with-nomad/p2.png"

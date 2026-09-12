@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import WritingCard from '../../components/WritingCard.astro';
-import TagFilter from '../../components/TagFilter.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('writings');
@@ -9,8 +8,6 @@ allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const latestPost = allPosts[0];
 const remainingPosts = allPosts.slice(1);
-
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
 ---
 
 <BaseLayout page="writings" title="Writings">
@@ -22,14 +19,10 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     )}
 
     <div class="below-fold reveal">
-      <TagFilter tags={allTags} />
-
       {remainingPosts.length > 0 ? (
         <div class="grid">
           {remainingPosts.map((post) => (
-            <div class="grid-item" data-tags={post.data.tags.join(',')}>
-              <WritingCard post={post} />
-            </div>
+            <WritingCard post={post} />
           ))}
         </div>
       ) : remainingPosts.length === 0 && latestPost ? null : (
@@ -38,33 +31,6 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     </div>
   </section>
 </BaseLayout>
-
-<script>
-  const tagFilter = document.querySelector('[data-component="tag-filter"]');
-  const gridItems = document.querySelectorAll('.grid-item');
-
-  if (tagFilter && gridItems.length > 0) {
-    tagFilter.addEventListener('tag-filter', ((e: CustomEvent) => {
-      const { mode, tags } = e.detail;
-
-      gridItems.forEach((item) => {
-        const itemTags = (item.dataset.tags ?? '').split(',').filter(Boolean);
-
-        if (tags.length === 0) {
-          (item as HTMLElement).style.display = '';
-          return;
-        }
-
-        const matches =
-          mode === 'or'
-            ? tags.some((t: string) => itemTags.includes(t))
-            : tags.every((t: string) => itemTags.includes(t));
-
-        (item as HTMLElement).style.display = matches ? '' : 'none';
-      });
-    }) as EventListener);
-  }
-</script>
 
 <style>
   .writings-page {

@@ -22,5 +22,3 @@
 ## Known follow-ups
 
 - `description` in the writings schema/frontmatter is not rendered anywhere yet.
-- Tag filtering (OR/AND) exists on `/writings` but the current two posts have no
-  overlapping tags, so it has nothing to filter.

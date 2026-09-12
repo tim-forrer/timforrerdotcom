@@ -1,7 +1,6 @@
 ---
 title: "Learning to Write"
 date: 2026-06-25
-tags: [learning, casual]
 description: "Trying to write better."
 handwriting:
   - "/writings/learning-to-write/Essays_Page_1.png"
