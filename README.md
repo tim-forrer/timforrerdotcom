@@ -62,7 +62,7 @@ src/
 public/
   photos/<theme>/           Photo files — the source of truth for galleries
   writings/<slug>/          Handwritten page images (PNG)
-  favicon.svg, _headers, photos/placeholder.svg
+  favicon.svg, header.png, _headers, photos/placeholder.svg
 
 photos/                     Configuration for the photo galleries
   config.json               Collection order, homepage hero, "Featured" reel
