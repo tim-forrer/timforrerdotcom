@@ -16,10 +16,6 @@ export const homepagePhoto: string | null = data.homepage;
 
 export const photoCollections: PhotoCollection[] = data.collections;
 
-export function getFeaturedCollection(): PhotoCollection | undefined {
-  return photoCollections.find((c) => c.slug === 'featured');
-}
-
 export function getCollectionBySlug(slug: string): PhotoCollection | undefined {
   return photoCollections.find((c) => c.slug === slug);
 }

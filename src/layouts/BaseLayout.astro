@@ -31,46 +31,12 @@ const { title, page } = Astro.props;
 </html>
 
 <script>
+  // Fade elements in as they enter the viewport.
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (prefersReducedMotion) {
-    // Show all animated content immediately — don't hide anything
-    document.querySelectorAll('.fade-in-on-scroll').forEach((el) => el.classList.add('visible'));
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('revealed'));
-    document.querySelectorAll('.fade-out-on-scroll').forEach((el) => {
-      el.style.opacity = '1';
-    });
   } else {
-    // Scroll-driven fade out/in for paired elements
-    const fadeOutEl = document.querySelector('.fade-out-on-scroll');
-    const fadeInEl = document.querySelector('.fade-in-on-scroll');
-
-    if (fadeOutEl && fadeInEl) {
-      let triggerPoint: number;
-
-      const updateTriggerPoint = () => {
-        triggerPoint = window.innerHeight * 0.3;
-      };
-
-      const onScroll = () => {
-        const scrollY = window.scrollY;
-        const progress = Math.min(scrollY / triggerPoint, 1);
-
-        if (progress >= 1) {
-          fadeOutEl.classList.add('scrolled');
-          fadeInEl.classList.add('visible');
-        } else {
-          fadeOutEl.classList.remove('scrolled');
-          fadeInEl.classList.remove('visible');
-        }
-      };
-
-      updateTriggerPoint();
-      window.addEventListener('resize', updateTriggerPoint, { passive: true });
-      window.addEventListener('scroll', onScroll, { passive: true });
-    }
-
-    // Unobserve revealed elements
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

@@ -1,12 +1,13 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { readingTime } from '../lib/reading-time';
 
 export interface Props {
   post: CollectionEntry<'writings'>;
 }
 
 const { post } = Astro.props;
-const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 1000));
+const minutes = readingTime(post);
 const thumbSrc = post.data.handwriting?.[0] ?? post.data.hero ?? null;
 const hasThumb = !!thumbSrc;
 ---
@@ -17,7 +18,7 @@ const hasThumb = !!thumbSrc;
       {hasThumb && <img src={thumbSrc} alt="" />}
     </div>
     <h2 class="title">{post.data.title}</h2>
-    <p class="meta">{readingTime} min read</p>
+    <p class="meta">{minutes} min read</p>
   </a>
 </article>
 
