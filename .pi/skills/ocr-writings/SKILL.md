@@ -79,7 +79,6 @@ The writings collection (`src/content.config.ts`) requires a YAML frontmatter bl
 
 - **`title`** (string, required) — the title of the writing.
 - **`date`** (date, required) — the date, as `YYYY-MM-DD`.
-- **`tags`** (array of strings, required, defaults to `[]`) — e.g. `[handwriting, reflections]`.
 - **`description`** (string, optional) — a one-line summary, or omit.
 - **`handwriting`** (array of strings, optional) — derived automatically from the display images (see step 7); confirm with the user but do not ask them to type it out.
 
@@ -95,7 +94,6 @@ Write the assembled frontmatter followed by the transcribed text to `src/content
 ---
 title: "Learning to Write"
 date: 2026-06-25
-tags: [learning, casual]
 description: "Trying to write better."
 handwriting:
   - "/writings/learning-to-write/Essays_Page_1.png"

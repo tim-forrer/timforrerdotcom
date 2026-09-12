@@ -4,7 +4,6 @@
 
 - [ ] Update bio on the about page
 - [ ] Add more writings to `src/content/writings/`
-- [ ] Push to GitHub: `git push -u origin main` (remote already configured)
 - [ ] Connect repo to Cloudflare Pages (build: `npm run build`, output dir: `dist`)
 
 ## Current state
@@ -15,9 +14,9 @@
   build step. `src/data/photos.ts` reads the folder tree at build time.
   Configuration lives in a single `photos/config.json`. See `photos/README.md`.
 - **Writings** are Markdown in `src/content/writings/`. Handwritten posts show a
-  Handwritten/Typed toggle and page images; see
-  `src/pages/writings/[...slug].astro`.
-- **Build:** `npm run build` → 9 static pages in `dist/` (plus `404.html`).
+  Handwritten/Typed toggle (pure CSS) and page images; only the page-turning uses
+  JS. No tags/categories. See `src/pages/writings/[...slug].astro` and `README.md`.
+- **Build:** `npm run build` → 10 static pages in `dist/` (9 routes + `404.html`).
 
 ## Known follow-ups
 

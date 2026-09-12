@@ -1,5 +1,10 @@
 # Handwritten Writings — Design Spec
 
+> **Status: historical.** Original design for the handwriting feature. Mostly
+> still accurate, except: the Handwritten/Typed toggle is now pure CSS (no JS),
+> tags were removed from the schema, and OCR is handled by the `ocr-writings`
+> skill. See `README.md` and `AGENTS.md` for the current state.
+
 ## Overview
 
 Replace the current typed blog-style writings section with handwritten content exported from a Supernote (transparent PNGs). Each writing exists as a folder of handwritten page images plus a Markdown file with metadata and a typed version for text mode.

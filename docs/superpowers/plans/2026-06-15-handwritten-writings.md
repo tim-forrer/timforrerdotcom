@@ -1,5 +1,11 @@
 # Handwritten Writings Implementation Plan
 
+> **Status: historical.** Original plan for the handwriting feature. Some details
+> have since changed — the view toggle is now pure CSS, tags were removed, the
+> frontmatter schema moved to `src/content.config.ts`, and OCR runs via the
+> `ocr-writings` skill rather than a shell script. See `README.md` and `AGENTS.md`
+> for the current implementation.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace typed blog-style writings with handwritten PNGs from a Supernote, with a client-side toggle to switch between handwriting (paginated) and text views. Tags preserved for filtering.

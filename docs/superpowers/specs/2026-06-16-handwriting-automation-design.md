@@ -1,5 +1,10 @@
 # Handwriting Automation Design Spec (2026-06-16)
 
+> **Status: superseded.** The shell + LMStudio pipeline described here was
+> replaced by the pi `ocr-writings` skill (`.pi/skills/ocr-writings/`), which uses
+> `google/gemma-4-31b-it` subagents and needs no API key or scripts. Kept for
+> history. See `AGENTS.md` (tools section) for the current workflow.
+
 ## 1. Overview
 Automated pipeline to process handwritten Supernote exports into website-ready display images and searchable markdown content.
 

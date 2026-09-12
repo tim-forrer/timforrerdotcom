@@ -1,6 +1,28 @@
+<!-- site -->
+Static Astro site for timforrer.com — essays (writings) and photography. No runtime: `output: 'static'`, builds plain HTML to `dist/`; deployed to Cloudflare Pages (build `npm run build`, output `dist`).
+
+Commands: `npm run dev` (localhost:4321) · `npm run build` → `dist/` · `npm run preview`.
+
+Key files:
+- `src/pages/` — file-based routes: `/`, `/about`, `/photos`, `/photos/<theme>`, `/writings`, `/writings/<slug>`, `404`.
+- `src/layouts/BaseLayout.astro` — HTML shell, nav, scroll-reveal.
+- `src/components/` — `Nav`, `WritingCard`, `CollectionPicker`, `Lightbox`, `HWPagination`.
+- `src/content/writings/*.md` — essays; schema in `src/content.config.ts`.
+- `src/data/photos.ts` — reads `public/photos/` at build time (see photos below).
+- `src/lib/reading-time.ts`, `src/styles/global.css`.
+
+Full map and content model: `README.md`.
+<!-- site -->
+
 <!-- tools -->
 OCR of handwritten writings is handled by the `ocr-writings` skill (`.pi/skills/ocr-writings/`), which transcribes pages to markdown using `google/gemma-4-31b-it` subagents in parallel. No API key needed — pi manages credentials. Requires ImageMagick (`brew install imagemagick`). Invoke by asking the agent to process a writings slug, or `/skill:ocr-writings <slug>`.
 <!-- tools -->
+
+<!-- writings -->
+Essays live in `src/content/writings/<slug>.md`; the filename is the URL (`/writings/<slug>`). Frontmatter schema (`src/content.config.ts`): `title` and `date` required; `description` and `handwriting[]` optional. No tags/categories.
+
+Posts with a `handwriting` array render a Handwritten/Typed toggle on the detail page. The switch is **pure CSS** (hidden radio inputs + labels) — no JS. Only the page-turning (`HWPagination` + a small inline script in `[...slug].astro`) uses JS. Scanned pages are transcribed into the Markdown body by the `ocr-writings` skill (see tools above).
+<!-- writings -->
 
 <!-- photos -->
 Photos on the site are **folder-driven**, not hand-coded. The image folders in `public/photos/` are the source of truth and each subfolder is one theme (collection): `animals`, `architecture`, `clouds`, `nature`, `street`, `night`. Create themes by adding a folder; retheme a photo by moving its file. There is **no build step and no generated listing** — `src/data/photos.ts` reads the folder tree at build time. `astro build` always picks up changes fresh; restart `npm run dev` to see newly added/moved files locally.
