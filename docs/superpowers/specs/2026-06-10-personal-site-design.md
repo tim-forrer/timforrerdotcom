@@ -1,5 +1,12 @@
 # Personal Site — Design Spec
 
+> **Status: historical / partly superseded.** This is the original v1 design doc,
+> kept for reference. It no longer describes the live site. In particular the
+> About "timeline" and contact form were never shipped, photo collections are now
+> folder-driven from `public/photos/` (see `photos/README.md`), the homepage has
+> no scroll cross-fade, and there is no Cloudflare adapter. For current behavior
+> see `AGENTS.md` and `docs/TODO.md`.
+
 ## Overview
 
 A personal website showcasing writings, photography, and an about page. Built with Astro, styled in a neutral palette with serif body text and sans-serif UI elements.

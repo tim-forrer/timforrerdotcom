@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Not found">
+  <section class="not-found reveal">
+    <p class="code">404</p>
+    <h1 class="message">This page doesn't exist.</h1>
+    <p class="hint"><a href="/">Head back home</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding: 80px 0 40px;
+  }
+
+  .code {
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-label);
+    margin: 0 0 12px;
+  }
+
+  .message {
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--text-title);
+    margin: 0 0 20px;
+  }
+
+  .hint {
+    margin: 0;
+  }
+
+  .hint a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .message {
+      font-size: 24px;
+    }
+    .hint a {
+      font-size: 19px;
+    }
+  }
+</style>

@@ -2,17 +2,25 @@
 
 ## Next
 
-- [ ] Add real photos to `public/photos/placeholders/` and update `src/data/photos.ts` with correct filenames
-- [ ] Update bio on about page to reflect Tokyo-based life
-- [ ] Add real writings to `src/content/writings/`
-- [ ] Create GitHub repo and push: `git remote add origin <url> && git push -u origin main`
-- [ ] Connect repo to Cloudflare Pages (build: `npm run build`, output dir: `dist/client`)
+- [ ] Update bio on the about page
+- [ ] Add more writings to `src/content/writings/`
+- [ ] Push to GitHub: `git push -u origin main` (remote already configured)
+- [ ] Connect repo to Cloudflare Pages (build: `npm run build`, output dir: `dist`)
 
-## Session Context (Jun 11)
+## Current state
 
-- Homepage: hero image is `position: fixed; inset: 0; z-index: -1` — centered in viewport, nav floats on top
-- Nav: logo matches links in `var(--text-muted)`, both hover to `var(--text)`
-- Body: `#f7f6f5` background, `display: flex; flex-direction: column; min-height: 100vh`
-- About timeline: year above each entry, blank vertical lines between. Currently: Swindon '98 → Reading '00 → Durham '17 → Tokyo '21
-- Build: `npm run build` (8 static pages), deploy output is `dist/client`
-- All current work committed to main (`f884326`)
+- **Static site, no runtime.** ASTRO `output: 'static'`; build emits plain HTML to
+  `dist/`. No adapter or server binding.
+- **Photos are folder-driven.** Drop images into `public/photos/<theme>/`; no
+  build step. `src/data/photos.ts` reads the folder tree at build time.
+  Configuration lives in a single `photos/config.json`. See `photos/README.md`.
+- **Writings** are Markdown in `src/content/writings/`. Handwritten posts show a
+  Handwritten/Typed toggle and page images; see
+  `src/pages/writings/[...slug].astro`.
+- **Build:** `npm run build` → 9 static pages in `dist/` (plus `404.html`).
+
+## Known follow-ups
+
+- `description` in the writings schema/frontmatter is not rendered anywhere yet.
+- Tag filtering (OR/AND) exists on `/writings` but the current two posts have no
+  overlapping tags, so it has nothing to filter.
