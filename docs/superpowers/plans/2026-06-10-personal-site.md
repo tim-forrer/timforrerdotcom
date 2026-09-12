@@ -1,5 +1,9 @@
 # Personal Site Implementation Plan
 
+> **Status: historical.** This plan describes the original v1 build and is not
+> maintained. Some steps no longer match the repo (e.g. there is no Cloudflare
+> adapter). See `docs/TODO.md` and `AGENTS.md` for the current state.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a personal website with writings, photography, and an about page using Astro, deployed on Cloudflare Pages.
