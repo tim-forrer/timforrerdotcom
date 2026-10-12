@@ -1,5 +1,5 @@
 ---
-title: "Olympos - Book Review"
+title: "Olympos – Book Review"
 date: 2026-10-10
 description: "Unfortunately, Olympos fails to live up to expectations set by Ilium."
 handwriting:
