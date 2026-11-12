@@ -4,6 +4,8 @@
   <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
   <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous">&#8249;</button>
   <button class="lightbox-next" id="lightbox-next" aria-label="Next">&#8250;</button>
+  <div class="lightbox-tap-left" id="lightbox-tap-left" aria-hidden="true"></div>
+  <div class="lightbox-tap-right" id="lightbox-tap-right" aria-hidden="true"></div>
   <div class="lightbox-content">
     <img id="lightbox-img" src="" alt="" />
   </div>
@@ -57,6 +59,8 @@
     opacity: 1;
   }
 
+  /* Arrows: hidden by default, revealed on mouse movement (see JS below),
+     fading out after a couple of seconds idle — like video player controls. */
   .lightbox-prev,
   .lightbox-next {
     position: absolute;
@@ -67,14 +71,23 @@
     color: white;
     font-size: 48px;
     cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.2s;
+    opacity: 0;
+    transition: opacity 0.4s;
     padding: 8px 16px;
     z-index: 101;
+    pointer-events: none;
   }
 
-  .lightbox-prev:hover,
-  .lightbox-next:hover {
+  .lightbox.controls-visible .lightbox-prev,
+  .lightbox.controls-visible .lightbox-next {
+    opacity: 0.5;
+    pointer-events: auto;
+  }
+
+  .lightbox.controls-visible .lightbox-prev:hover,
+  .lightbox.controls-visible .lightbox-next:hover,
+  .lightbox-prev:focus-visible,
+  .lightbox-next:focus-visible {
     opacity: 1;
   }
 
@@ -85,6 +98,38 @@
   .lightbox-next {
     right: 16px;
   }
+
+  /* Invisible edge tap zones: touch devices only. */
+  .lightbox-tap-left,
+  .lightbox-tap-right {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 33%;
+    z-index: 100;
+  }
+
+  .lightbox-tap-left {
+    left: 0;
+  }
+
+  .lightbox-tap-right {
+    right: 0;
+  }
+
+  /* Touch devices: no arrows — swipe or tap the screen edges instead. */
+  @media (hover: none) {
+    .lightbox-prev,
+    .lightbox-next {
+      display: none;
+    }
+
+    .lightbox-tap-left,
+    .lightbox-tap-right {
+      display: block;
+    }
+  }
 </style>
 
 <script>
@@ -93,14 +138,32 @@
   const closeBtn = document.getElementById('lightbox-close');
   const prevBtn = document.getElementById('lightbox-prev');
   const nextBtn = document.getElementById('lightbox-next');
+  const tapLeft = document.getElementById('lightbox-tap-left');
+  const tapRight = document.getElementById('lightbox-tap-right');
 
   let photos: string[] = [];
   let currentIndex = 0;
+  let controlsTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function showControls() {
+    lightbox.classList.add('controls-visible');
+    clearTimeout(controlsTimer);
+    controlsTimer = setTimeout(
+      () => lightbox.classList.remove('controls-visible'),
+      1000,
+    );
+  }
+
+  function hideControls() {
+    clearTimeout(controlsTimer);
+    lightbox.classList.remove('controls-visible');
+  }
 
   function open(src: string) {
     currentIndex = photos.indexOf(src);
     updateImage();
     lightbox.classList.add('open');
+    showControls();
     document.body.style.overflow = 'hidden';
   }
 
@@ -117,11 +180,13 @@
   function prev() {
     currentIndex = (currentIndex - 1 + photos.length) % photos.length;
     updateImage();
+    showControls();
   }
 
   function next() {
     currentIndex = (currentIndex + 1) % photos.length;
     updateImage();
+    showControls();
   }
 
   document.querySelectorAll('.masonry-item img').forEach((img) => {
@@ -134,10 +199,59 @@
   closeBtn.addEventListener('click', close);
   prevBtn.addEventListener('click', prev);
   nextBtn.addEventListener('click', next);
+  tapLeft.addEventListener('click', prev);
+  tapRight.addEventListener('click', next);
 
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) close();
-  });
+  // Desktop: reveal controls on mouse movement, fade out when idle or when
+  // the cursor leaves the window. Touch devices don't fire mousemove, and the
+  // arrows are display:none there anyway.
+  lightbox.addEventListener('mousemove', showControls);
+  document.documentElement.addEventListener('mouseleave', hideControls);
+
+  // Touch: swipe left/right to navigate. A flag suppresses the click event
+  // browsers can fire after a swipe so taps and swipes never double-fire.
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let swiped = false;
+
+  lightbox.addEventListener(
+    'touchstart',
+    (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      swiped = false;
+    },
+    { passive: true },
+  );
+
+  lightbox.addEventListener(
+    'touchend',
+    (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        swiped = true;
+        if (dx < 0) next();
+        else prev();
+      }
+    },
+    { passive: true },
+  );
+
+  lightbox.addEventListener(
+    'click',
+    (e) => {
+      if (swiped) {
+        e.stopPropagation();
+        swiped = false;
+        return;
+      }
+      if (e.target === lightbox) close();
+    },
+    true,
+  );
 
   document.addEventListener('keydown', (e) => {
     if (!lightbox.classList.contains('open')) return;
