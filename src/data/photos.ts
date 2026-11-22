@@ -105,7 +105,7 @@ function buildPhoto(slug: string, file: string): Photo {
     throw new Error(`Missing photo metadata for ${relativeFile} in photos/metadata.json`);
   }
 
-  const thumbFile = `${file}.480.webp`;
+  const thumbFile = `${file}.${SMALL_WIDTH}.webp`;
   const largeFile = `${file}.${LARGE_WIDTH}.webp`;
   const thumbDiskPath = path.join(VARIANTS_DIR, slug, thumbFile);
   const largeDiskPath = path.join(VARIANTS_DIR, slug, largeFile);

@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CollectionPicker from '../../components/CollectionPicker.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { photoCollections, getCollectionBySlug } from '../../data/photos';
-import type { GetStaticPaths } from 'astro';
 
 export async function getStaticPaths() {
   return photoCollections.map((col) => ({

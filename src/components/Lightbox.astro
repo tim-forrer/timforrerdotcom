@@ -171,6 +171,10 @@
   const tapRight = document.getElementById('lightbox-tap-right');
 
   if (lightbox && lightboxImg && count && closeBtn && prevBtn && nextBtn && tapLeft && tapRight) {
+    const lightboxElement = lightbox;
+    const lightboxImage = lightboxImg;
+    const lightboxCount = count;
+    const closeButton = closeBtn;
     const triggers = [...document.querySelectorAll<HTMLButtonElement>('.masonry-item[data-full-src]')];
     const photos: PhotoItem[] = triggers.map((trigger) => ({
       src: trigger.dataset.fullSrc ?? '',
@@ -185,22 +189,22 @@
     let swiped = false;
 
     function showControls() {
-      lightbox.classList.add('controls-visible');
+      lightboxElement.classList.add('controls-visible');
       clearTimeout(controlsTimer);
-      controlsTimer = setTimeout(() => lightbox.classList.remove('controls-visible'), 1000);
+      controlsTimer = setTimeout(() => lightboxElement.classList.remove('controls-visible'), 1000);
     }
 
     function hideControls() {
       clearTimeout(controlsTimer);
-      lightbox.classList.remove('controls-visible');
+      lightboxElement.classList.remove('controls-visible');
     }
 
     function updateImage() {
       const photo = photos[currentIndex];
       if (!photo) return;
-      lightboxImg.src = photo.src;
-      lightboxImg.alt = photo.alt;
-      count.textContent = `${currentIndex + 1} of ${photos.length}`;
+      lightboxImage.src = photo.src;
+      lightboxImage.alt = photo.alt;
+      lightboxCount.textContent = `${currentIndex + 1} of ${photos.length}`;
     }
 
     function open(index: number, trigger: HTMLButtonElement) {
@@ -208,18 +212,18 @@
       currentIndex = index;
       triggerElement = trigger;
       updateImage();
-      lightbox.setAttribute('aria-hidden', 'false');
-      lightbox.classList.add('open');
+      lightboxElement.setAttribute('aria-hidden', 'false');
+      lightboxElement.classList.add('open');
       previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       showControls();
-      closeBtn.focus();
+      closeButton.focus();
     }
 
     function close() {
-      lightbox.classList.remove('open', 'controls-visible');
-      lightbox.setAttribute('aria-hidden', 'true');
-      lightboxImg.removeAttribute('src');
+      lightboxElement.classList.remove('open', 'controls-visible');
+      lightboxElement.setAttribute('aria-hidden', 'true');
+      lightboxImage.removeAttribute('src');
       document.body.style.overflow = previousOverflow;
       clearTimeout(controlsTimer);
       triggerElement?.focus();
@@ -250,18 +254,18 @@
     nextBtn.addEventListener('click', next);
     tapLeft.addEventListener('click', previous);
     tapRight.addEventListener('click', next);
-    lightbox.addEventListener('mousemove', showControls);
+    lightboxElement.addEventListener('mousemove', showControls);
     document.documentElement.addEventListener('mouseleave', hideControls);
 
-    lightbox.addEventListener('touchstart', (event) => {
-      if (lightbox.getAttribute('aria-hidden') === 'true') return;
+    lightboxElement.addEventListener('touchstart', (event) => {
+      if (lightboxElement.getAttribute('aria-hidden') === 'true') return;
       touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
       swiped = false;
     }, { passive: true });
 
-    lightbox.addEventListener('touchend', (event) => {
-      if (lightbox.getAttribute('aria-hidden') === 'true') return;
+    lightboxElement.addEventListener('touchend', (event) => {
+      if (lightboxElement.getAttribute('aria-hidden') === 'true') return;
       const dx = event.changedTouches[0].clientX - touchStartX;
       const dy = event.changedTouches[0].clientY - touchStartY;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
@@ -271,13 +275,13 @@
       }
     }, { passive: true });
 
-    lightbox.addEventListener('click', (event) => {
+    lightboxElement.addEventListener('click', (event) => {
       if (swiped) {
         event.stopPropagation();
         swiped = false;
         return;
       }
-      if (event.target === lightbox) close();
+      if (event.target === lightboxElement) close();
     }, true);
 
     document.addEventListener('keydown', (event) => {

@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HWPagination from '../../components/HWPagination.astro';
 import { getCollection, render } from 'astro:content';
-import type { GetStaticPaths } from 'astro';
 import { readingTime } from '../../lib/reading-time';
 import { assertWritingImageVariants, writingImagePath } from '../../lib/writing-image';
 
@@ -121,10 +120,12 @@ const hasHandwriting = handwritingPages.length > 0;
 {hasHandwriting && (
   <script>
     const container = document.getElementById('hw-container');
-    const pagination = document.querySelector('[data-component="hw-pagination"]');
+    const pagination = document.querySelector<HTMLElement>('[data-component="hw-pagination"]');
 
     if (container && pagination) {
-      const pages = container.querySelectorAll('.hw-page');
+      const handwritingContainer = container;
+      const paginationElement = pagination;
+      const pages = handwritingContainer.querySelectorAll<HTMLElement>('.hw-page');
       const totalPages = pages.length;
       const wideMq = window.matchMedia('(min-width: 1024px)');
       let anchorPage = 1;
@@ -139,17 +140,17 @@ const hasHandwriting = handwritingPages.length > 0;
         const spread = wideMq.matches ? Math.ceil(anchorPage / 2) : anchorPage;
         const total = wideMq.matches ? Math.ceil(totalPages / 2) : totalPages;
 
-        const count = pagination.querySelector('.page-count');
+        const count = paginationElement.querySelector<HTMLElement>('.page-count');
         if (count) count.textContent = spread + ' / ' + total;
 
-        const prev = pagination.querySelector('[data-action="prev"]');
-        const next = pagination.querySelector('[data-action="next"]');
+        const prev = paginationElement.querySelector<HTMLButtonElement>('[data-action="prev"]');
+        const next = paginationElement.querySelector<HTMLButtonElement>('[data-action="next"]');
         if (prev) prev.disabled = spread <= 1;
         if (next) next.disabled = spread >= total;
       }
 
-      pagination.addEventListener('page-change', ((e) => {
-        const desiredSpread = e.detail.page;
+      paginationElement.addEventListener('page-change', ((e) => {
+        const desiredSpread = (e as CustomEvent<{ page: number }>).detail.page;
         anchorPage = wideMq.matches ? (desiredSpread - 1) * 2 + 1 : desiredSpread;
         render();
       }) as EventListener);
