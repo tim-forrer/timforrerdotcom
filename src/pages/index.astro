@@ -4,10 +4,27 @@ import { homepagePhoto } from '../data/photos';
 
 ---
 
-<BaseLayout title="Home">
-  <section class="hero">
+<BaseLayout
+  title="Home"
+  description="Photography and writing by Tim Forrer."
+  socialImage={homepagePhoto?.src}
+>
+  <section class="hero" aria-label="Featured photograph">
     <div class="hero-image">
-      <img src={homepagePhoto ?? '/photos/placeholder.svg'} alt="Featured photo" />
+      {homepagePhoto ? (
+        <img
+          src={homepagePhoto.src}
+          srcset={`${homepagePhoto.thumbSrc} 480w, ${homepagePhoto.src} ${homepagePhoto.largeWidth}w`}
+          sizes="(max-width: 600px) 84vw, min(80vw, 1024px)"
+          alt={homepagePhoto.alt}
+          width={homepagePhoto.width}
+          height={homepagePhoto.height}
+          fetchpriority="high"
+          decoding="async"
+        />
+      ) : (
+        <img src="/photos/placeholder.svg" alt="No featured photograph selected" />
+      )}
     </div>
   </section>
 </BaseLayout>

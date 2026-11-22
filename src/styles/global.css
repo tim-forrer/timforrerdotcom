@@ -48,20 +48,20 @@ nav {
   padding-right: var(--page-margin);
 }
 
-/* Scroll-reveal: elements hidden until scrolled into view */
-.reveal {
+/* Scroll-reveal is enabled by JavaScript only after IntersectionObserver is ready. */
+html.js-reveal .reveal {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.reveal.revealed {
+html.js-reveal .reveal.revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Reduced motion: reveal content immediately, no transitions */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  html.js-reveal .reveal {
     transition: none;
     opacity: 1;
     transform: none;

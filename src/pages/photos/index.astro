@@ -3,14 +3,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { photoCollections } from '../../data/photos';
 ---
 
-<BaseLayout page="photos" title="Photos">
+<BaseLayout page="photos" title="Photos" description="Photography collections by Tim Forrer.">
   <section class="photos-landing">
     {photoCollections.length > 0 ? (
       <div class="cover-grid reveal">
         {photoCollections.map((col, i) => (
           <a href={`/photos/${col.slug}`} class="cover-card">
             <div class="cover-img">
-              <img src={col.cover} alt="" />
+              <img
+                src={col.cover.thumbSrc}
+                alt=""
+                width={col.cover.width}
+                height={col.cover.height}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
             </div>
             <span class="label">{col.title}</span>
             {col.slug === 'featured' && (

@@ -1,13 +1,21 @@
 ---
 ---
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
-  <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous">&#8249;</button>
-  <button class="lightbox-next" id="lightbox-next" aria-label="Next">&#8250;</button>
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Photo viewer"
+  aria-hidden="true"
+>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close photo viewer">&times;</button>
+  <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous photo">&#8249;</button>
+  <button class="lightbox-next" id="lightbox-next" aria-label="Next photo">&#8250;</button>
   <div class="lightbox-tap-left" id="lightbox-tap-left" aria-hidden="true"></div>
   <div class="lightbox-tap-right" id="lightbox-tap-right" aria-hidden="true"></div>
   <div class="lightbox-content">
     <img id="lightbox-img" src="" alt="" />
+    <span class="lightbox-count" id="lightbox-count" aria-live="polite"></span>
   </div>
 </div>
 
@@ -26,12 +34,27 @@
     display: flex;
   }
 
+  .lightbox[aria-hidden='true'] {
+    display: none;
+  }
+
   .lightbox-content {
     max-width: 90vw;
     max-height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .lightbox-count {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    text-shadow: 0 1px 4px #000;
   }
 
   .lightbox-content img {
@@ -133,130 +156,156 @@
 </style>
 
 <script>
+  interface PhotoItem {
+    src: string;
+    alt: string;
+  }
+
   const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const closeBtn = document.getElementById('lightbox-close');
-  const prevBtn = document.getElementById('lightbox-prev');
-  const nextBtn = document.getElementById('lightbox-next');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  const count = document.getElementById('lightbox-count');
+  const closeBtn = document.getElementById('lightbox-close') as HTMLButtonElement | null;
+  const prevBtn = document.getElementById('lightbox-prev') as HTMLButtonElement | null;
+  const nextBtn = document.getElementById('lightbox-next') as HTMLButtonElement | null;
   const tapLeft = document.getElementById('lightbox-tap-left');
   const tapRight = document.getElementById('lightbox-tap-right');
 
-  let photos: string[] = [];
-  let currentIndex = 0;
-  let controlsTimer: ReturnType<typeof setTimeout> | undefined;
+  if (lightbox && lightboxImg && count && closeBtn && prevBtn && nextBtn && tapLeft && tapRight) {
+    const triggers = [...document.querySelectorAll<HTMLButtonElement>('.masonry-item[data-full-src]')];
+    const photos: PhotoItem[] = triggers.map((trigger) => ({
+      src: trigger.dataset.fullSrc ?? '',
+      alt: trigger.dataset.alt ?? '',
+    }));
+    let currentIndex = 0;
+    let triggerElement: HTMLButtonElement | null = null;
+    let previousOverflow = '';
+    let controlsTimer: ReturnType<typeof setTimeout> | undefined;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let swiped = false;
 
-  function showControls() {
-    lightbox.classList.add('controls-visible');
-    clearTimeout(controlsTimer);
-    controlsTimer = setTimeout(
-      () => lightbox.classList.remove('controls-visible'),
-      1000,
-    );
-  }
+    function showControls() {
+      lightbox.classList.add('controls-visible');
+      clearTimeout(controlsTimer);
+      controlsTimer = setTimeout(() => lightbox.classList.remove('controls-visible'), 1000);
+    }
 
-  function hideControls() {
-    clearTimeout(controlsTimer);
-    lightbox.classList.remove('controls-visible');
-  }
+    function hideControls() {
+      clearTimeout(controlsTimer);
+      lightbox.classList.remove('controls-visible');
+    }
 
-  function open(src: string) {
-    currentIndex = photos.indexOf(src);
-    updateImage();
-    lightbox.classList.add('open');
-    showControls();
-    document.body.style.overflow = 'hidden';
-  }
+    function updateImage() {
+      const photo = photos[currentIndex];
+      if (!photo) return;
+      lightboxImg.src = photo.src;
+      lightboxImg.alt = photo.alt;
+      count.textContent = `${currentIndex + 1} of ${photos.length}`;
+    }
 
-  function close() {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
+    function open(index: number, trigger: HTMLButtonElement) {
+      if (photos.length === 0) return;
+      currentIndex = index;
+      triggerElement = trigger;
+      updateImage();
+      lightbox.setAttribute('aria-hidden', 'false');
+      lightbox.classList.add('open');
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      showControls();
+      closeBtn.focus();
+    }
 
-  function updateImage() {
-    lightboxImg.src = photos[currentIndex];
-    lightboxImg.alt = `Photo ${currentIndex + 1} of ${photos.length}`;
-  }
+    function close() {
+      lightbox.classList.remove('open', 'controls-visible');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImg.removeAttribute('src');
+      document.body.style.overflow = previousOverflow;
+      clearTimeout(controlsTimer);
+      triggerElement?.focus();
+      triggerElement = null;
+    }
 
-  function prev() {
-    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-    updateImage();
-    showControls();
-  }
+    function goTo(index: number) {
+      if (photos.length < 2) return;
+      currentIndex = (index + photos.length) % photos.length;
+      updateImage();
+      showControls();
+    }
 
-  function next() {
-    currentIndex = (currentIndex + 1) % photos.length;
-    updateImage();
-    showControls();
-  }
+    function previous() {
+      goTo(currentIndex - 1);
+    }
 
-  document.querySelectorAll('.masonry-item img').forEach((img) => {
-    const htmlImg = img as HTMLImageElement;
-    photos.push(htmlImg.src);
-    htmlImg.style.cursor = 'pointer';
-    htmlImg.addEventListener('click', () => open(htmlImg.src));
-  });
+    function next() {
+      goTo(currentIndex + 1);
+    }
 
-  closeBtn.addEventListener('click', close);
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
-  tapLeft.addEventListener('click', prev);
-  tapRight.addEventListener('click', next);
+    triggers.forEach((trigger, index) => {
+      trigger.addEventListener('click', () => open(index, trigger));
+    });
 
-  // Desktop: reveal controls on mouse movement, fade out when idle or when
-  // the cursor leaves the window. Touch devices don't fire mousemove, and the
-  // arrows are display:none there anyway.
-  lightbox.addEventListener('mousemove', showControls);
-  document.documentElement.addEventListener('mouseleave', hideControls);
+    closeBtn.addEventListener('click', close);
+    prevBtn.addEventListener('click', previous);
+    nextBtn.addEventListener('click', next);
+    tapLeft.addEventListener('click', previous);
+    tapRight.addEventListener('click', next);
+    lightbox.addEventListener('mousemove', showControls);
+    document.documentElement.addEventListener('mouseleave', hideControls);
 
-  // Touch: swipe left/right to navigate. A flag suppresses the click event
-  // browsers can fire after a swipe so taps and swipes never double-fire.
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let swiped = false;
-
-  lightbox.addEventListener(
-    'touchstart',
-    (e) => {
-      if (!lightbox.classList.contains('open')) return;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
+    lightbox.addEventListener('touchstart', (event) => {
+      if (lightbox.getAttribute('aria-hidden') === 'true') return;
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
       swiped = false;
-    },
-    { passive: true },
-  );
+    }, { passive: true });
 
-  lightbox.addEventListener(
-    'touchend',
-    (e) => {
-      if (!lightbox.classList.contains('open')) return;
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      const dy = e.changedTouches[0].clientY - touchStartY;
+    lightbox.addEventListener('touchend', (event) => {
+      if (lightbox.getAttribute('aria-hidden') === 'true') return;
+      const dx = event.changedTouches[0].clientX - touchStartX;
+      const dy = event.changedTouches[0].clientY - touchStartY;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         swiped = true;
         if (dx < 0) next();
-        else prev();
+        else previous();
       }
-    },
-    { passive: true },
-  );
+    }, { passive: true });
 
-  lightbox.addEventListener(
-    'click',
-    (e) => {
+    lightbox.addEventListener('click', (event) => {
       if (swiped) {
-        e.stopPropagation();
+        event.stopPropagation();
         swiped = false;
         return;
       }
-      if (e.target === lightbox) close();
-    },
-    true,
-  );
+      if (event.target === lightbox) close();
+    }, true);
 
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') prev();
-    if (e.key === 'ArrowRight') next();
-  });
+    document.addEventListener('keydown', (event) => {
+      if (lightbox.getAttribute('aria-hidden') === 'true') return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        previous();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        next();
+      } else if (event.key === 'Tab') {
+        const focusable = [...lightbox.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')]
+          .filter((button) => button.getClientRects().length > 0);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  }
 </script>

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check": "astro check",
+    "photos:prepare": "node scripts/prepare-photos.mjs"
   },
   "dependencies": {
     "astro": "^6.4.5",
@@ -15,6 +17,8 @@
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.2"
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3"
   }
 }

@@ -10,11 +10,15 @@ const latestPost = allPosts[0];
 const remainingPosts = allPosts.slice(1);
 ---
 
-<BaseLayout page="writings" title="Writings">
+<BaseLayout
+  page="writings"
+  title="Writings"
+  description="Essays and notes by Tim Forrer."
+>
   <section class="writings-page">
     {latestPost && (
       <div class="latest reveal">
-        <WritingCard post={latestPost} />
+        <WritingCard post={latestPost} eager />
       </div>
     )}
 

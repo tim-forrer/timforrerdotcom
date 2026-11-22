@@ -4,9 +4,13 @@ import HWPagination from '../../components/HWPagination.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { readingTime } from '../../lib/reading-time';
+import { assertWritingImageVariants, writingImagePath } from '../../lib/writing-image';
 
 export async function getStaticPaths() {
   const posts = await getCollection('writings');
+  for (const post of posts) {
+    assertWritingImageVariants(post.data.handwriting ?? []);
+  }
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -21,7 +25,10 @@ const handwritingPages = post.data.handwriting ?? [];
 const hasHandwriting = handwritingPages.length > 0;
 ---
 
-<BaseLayout title={post.data.title}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description ?? post.body?.replace(/[#*_`>\[\]()]/g, '').replace(/\s+/g, ' ').trim().slice(0, 160)}
+>
   <article class="writing">
     {hasHandwriting && (
       <p class="sr-notice">
@@ -66,10 +73,14 @@ const hasHandwriting = handwritingPages.length > 0;
             {handwritingPages.map((src, i) => (
               <img
                 class="hw-page"
-                src={src}
-                alt=""
+                src={writingImagePath(src)}
+                alt={`Handwritten page ${i + 1}. Switch to Typed view for a readable transcription.`}
                 data-page={i}
-                style={{ display: i < 2 ? 'block' : 'none' }}
+                width="1024"
+                height="1365"
+                loading={i < 2 ? 'eager' : 'lazy'}
+                decoding="async"
+                style={{ display: i === 0 ? 'block' : 'none' }}
               />
             ))}
           </div>

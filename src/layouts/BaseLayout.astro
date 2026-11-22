@@ -6,9 +6,19 @@ import 'katex/dist/katex.min.css';
 export interface Props {
   title?: string;
   page?: string;
+  description?: string;
+  socialImage?: string;
+  canonicalUrl?: string;
 }
 
-const { title, page } = Astro.props;
+const { title, page, description, socialImage, canonicalUrl } = Astro.props;
+const pageTitle = title ? `${title} — tim forrer` : 'tim forrer';
+const canonical = canonicalUrl ?? (Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : undefined);
+const absoluteSocialImage = socialImage
+  ? (Astro.site ? new URL(socialImage, Astro.site).toString() : socialImage)
+  : undefined;
 ---
 
 <!doctype html>
@@ -16,8 +26,20 @@ const { title, page } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title ? `${title} — tim forrer` : 'tim forrer'}</title>
+    <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {description && <meta name="description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="tim forrer" />
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {absoluteSocialImage && <meta property="og:image" content={absoluteSocialImage} />}
+    <meta name="twitter:card" content={absoluteSocialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {absoluteSocialImage && <meta name="twitter:image" content={absoluteSocialImage} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
@@ -31,12 +53,11 @@ const { title, page } = Astro.props;
 </html>
 
 <script>
-  // Fade elements in as they enter the viewport.
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (prefersReducedMotion) {
-    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('revealed'));
-  } else {
+  // Keep content visible unless reveal behavior can be initialized successfully.
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-reveal');
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -46,7 +67,7 @@ const { title, page } = Astro.props;
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0 }
     );
 
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));

@@ -11,6 +11,8 @@ and deployed as a fully static site to Cloudflare Pages.
 | `npm run dev` | Start the dev server at http://localhost:4321 |
 | `npm run build` | Build the static site into `dist/` |
 | `npm run preview` | Serve the built site locally |
+| `npm run check` | Run Astro type and template checks |
+| `npm run photos:prepare` | Strip private media metadata and regenerate WebP variants |
 
 There is no codegen or pre-build step — `npm run build` is just `astro build`, and
 the contents of `dist/` can be deployed as-is (Cloudflare Pages: build command
@@ -22,7 +24,8 @@ the contents of `dist/` can be deployed as-is (Cloudflare Pages: build command
 - **Content collections** for writings, schema in `src/content.config.ts`.
 - **Markdown → HTML** via `remark-math` + `rehype-katex` (LaTeX maths, e.g. `$\rightarrow$`).
 - **Plain CSS** (`src/styles/global.css` + scoped component styles), no UI framework.
-- **Vanilla JS** only for the photo lightbox and the handwriting page-turning.
+- **Vanilla JS** only for the photo lightbox, collection picker, scroll reveal,
+  and handwriting page-turning.
 
 ## Routes
 
@@ -31,7 +34,7 @@ the contents of `dist/` can be deployed as-is (Cloudflare Pages: build command
 | `/` | `src/pages/index.astro` | Homepage — a single hero photo |
 | `/about` | `src/pages/about.astro` | Bio + current gear |
 | `/photos` | `src/pages/photos/index.astro` | Cover grid of photo themes |
-| `/photos/<theme>` | `src/pages/photos/[...collection].astro` | Masonry gallery + lightbox |
+| `/photos/<theme>` | `src/pages/photos/[...collection].astro` | Masonry gallery + lightbox; `/photos/featured` is generated when configured |
 | `/writings` | `src/pages/writings/index.astro` | Latest essay + grid of the rest |
 | `/writings/<slug>` | `src/pages/writings/[...slug].astro` | Essay (Handwritten ⇄ Typed toggle) |
 | `404` | `src/pages/404.astro` | Not-found page |
@@ -52,6 +55,7 @@ src/
   data/
     photos.ts               Reads public/photos/ at build time
   lib/
+    writing-image.ts        Maps handwriting scans to prepared WebP files
     reading-time.ts         Shared reading-time helper
   content/
     writings/*.md            Essays (Markdown + frontmatter)
@@ -61,11 +65,14 @@ src/
 
 public/
   photos/<theme>/           Photo files — the source of truth for galleries
+  photo-variants/<theme>/   Prepared 480px and 1600px WebP photo variants
+  writing-variants/<slug>/  Lossless WebP versions of handwriting scans
   writings/<slug>/          Handwritten page images (PNG)
   favicon.svg, header.png, _headers, photos/placeholder.svg
 
 photos/                     Configuration for the photo galleries
   config.json               Collection order, homepage hero, "Featured" reel
+  metadata.json             Alt text and dimensions for each source photo
   README.md                 Photo workflow
 
 docs/
@@ -100,11 +107,17 @@ handwriting:                               # optional; omit for text-only posts
 
 ### Photos
 
-Photo galleries are driven entirely by folders — see [`photos/README.md`](photos/README.md).
-In short: drop an image into `public/photos/<theme>/` and it appears. Ordering
-within a theme is alphabetical and the first image is the theme's cover. Gallery
-settings (collection order, homepage hero, "Featured" reel) live in
-`photos/config.json`.
+Photo galleries are driven by folders — see [`photos/README.md`](photos/README.md).
+Add a source image under `public/photos/<theme>/`, add its alt text and
+orientation-correct dimensions to `photos/metadata.json`, then run
+`npm run photos:prepare`. The first image after a case-sensitive filename sort
+is the collection cover. Gallery settings (collection order, homepage hero,
+"Featured" reel) live in `photos/config.json`.
+
+Run `npm run photos:prepare` after changing source photos or handwriting scans.
+The script requires ImageMagick and ExifTool, strips private image metadata, and
+creates the committed WebP variants used by the static pages. `npm run check`
+and `npm run build` run in GitHub Actions.
 
 ## Documentation
 

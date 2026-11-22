@@ -1,21 +1,34 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { readingTime } from '../lib/reading-time';
+import { writingImagePath } from '../lib/writing-image';
 
 export interface Props {
   post: CollectionEntry<'writings'>;
+  eager?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, eager = false } = Astro.props;
 const minutes = readingTime(post);
-const thumbSrc = post.data.handwriting?.[0] ?? post.data.hero ?? null;
+const thumbSrc = post.data.handwriting?.[0]
+  ? writingImagePath(post.data.handwriting[0])
+  : null;
 const hasThumb = !!thumbSrc;
 ---
 
 <article class="card">
   <a href={`/writings/${post.id}`}>
     <div class="thumb">
-      {hasThumb && <img src={thumbSrc} alt="" />}
+      {hasThumb && (
+        <img
+          src={thumbSrc}
+          alt=""
+          width="1024"
+          height="1365"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      )}
     </div>
     <h2 class="title">{post.data.title}</h2>
     <p class="meta">{minutes} min read</p>

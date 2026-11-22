@@ -16,17 +16,36 @@ const { collection } = Astro.props;
 const col = getCollectionBySlug(collection.slug);
 ---
 
-<BaseLayout title={col?.title ?? 'Collection'} page="photos">
+<BaseLayout
+  title={col?.title ?? 'Collection'}
+  page="photos"
+  description={`Photographs in the ${col?.title ?? 'photo'} collection by Tim Forrer.`}
+>
   <section class="collection-page">
     <div class="header-bar">
       <span class="collection-label">{col?.title}</span>
       <CollectionPicker current={collection.slug} />
     </div>
     <div class="masonry reveal">
-      {col?.photos.map((photo) => (
-        <div class="masonry-item">
-          <img src={photo.src} alt={photo.title} />
-        </div>
+      {col?.photos.map((photo, index) => (
+        <button
+          class="masonry-item"
+          type="button"
+          data-full-src={photo.src}
+          data-alt={photo.alt}
+          aria-label={`Open photo: ${photo.alt}`}
+        >
+          <img
+            src={photo.thumbSrc}
+            srcset={`${photo.thumbSrc} 480w, ${photo.src} ${photo.largeWidth}w`}
+            sizes="(max-width: 600px) 48vw, 32vw"
+            alt=""
+            width={photo.width}
+            height={photo.height}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </button>
       ))}
     </div>
   </section>
@@ -59,11 +78,22 @@ const col = getCollectionBySlug(collection.slug);
   }
 
   .masonry-item {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    cursor: zoom-in;
     break-inside: avoid;
     margin-bottom: 6px;
     border-radius: var(--radius-sm);
     overflow: hidden;
     background: #e0e0e0;
+  }
+
+  .masonry-item:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .masonry-item img {

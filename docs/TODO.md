@@ -10,14 +10,21 @@
 
 - **Static site, no runtime.** ASTRO `output: 'static'`; build emits plain HTML to
   `dist/`. No adapter or server binding.
-- **Photos are folder-driven.** Drop images into `public/photos/<theme>/`; no
-  build step. `src/data/photos.ts` reads the folder tree at build time.
-  Configuration lives in a single `photos/config.json`. See `photos/README.md`.
+- **Photos are folder-driven.** Source images live in `public/photos/<theme>/`;
+  metadata lives in `photos/metadata.json`; prepared display variants live under
+  `public/photo-variants/` and `public/writing-variants/`. Run
+  `npm run photos:prepare` after changing source media. Configuration lives in
+  `photos/config.json`. See `photos/README.md`.
 - **Writings** are Markdown in `src/content/writings/`. Handwritten posts show a
   Handwritten/Typed toggle (pure CSS) and page images; only the page-turning uses
   JS. No tags/categories. See `src/pages/writings/[...slug].astro` and `README.md`.
-- **Build:** `npm run build` → 10 static pages in `dist/` (9 routes + `404.html`).
+- **Build:** `npm run build` emits static routes from the current writing and
+  photo collections. The exact route count changes as content is added.
+
+- **Quality checks:** `npm run check` runs Astro's type and template checks;
+  GitHub Actions runs it before building.
 
 ## Known follow-ups
 
-- `description` in the writings schema/frontmatter is not rendered anywhere yet.
+- Recheck Core Web Vitals and network payloads in a browser after deployment;
+  browser performance tracing was unavailable during the source audit.
