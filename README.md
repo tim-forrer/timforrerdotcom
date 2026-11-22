@@ -20,7 +20,7 @@ the contents of `dist/` can be deployed as-is (Cloudflare Pages: build command
 
 ## Stack
 
-- **Astro 6** with `output: 'static'` — no adapter, no server runtime.
+- **Astro 7** with `output: 'static'` — no adapter, no server runtime.
 - **Content collections** for writings, schema in `src/content.config.ts`.
 - **Markdown → HTML** via `remark-math` + `rehype-katex` (LaTeX maths, e.g. `$\rightarrow$`).
 - **Plain CSS** (`src/styles/global.css` + scoped component styles), no UI framework.

@@ -25,6 +25,11 @@ ImageMagick and ExifTool (`brew install imagemagick exiftool`). Commit the
 resulting variant files. The build reports an error if photo metadata or a
 required derivative is missing.
 
+The source repository and its Git history are private. Historical source images
+are intentionally retained in Git; the preparation command sanitizes the
+current source files and generated public derivatives. Git history does not
+need to be rewritten for this site.
+
 When previewing locally, restart `npm run dev` after changing files under
 `public/` because Vite does not watch those files reliably.
 
